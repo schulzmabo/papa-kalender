@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Papa">
+<title>Papa's Kalender</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #1c1c1e; color: #f2f2f7; }
+.app-header { background: #7F77DD; padding: 18px 16px 14px; text-align: center; }
+.app-header h1 { font-size: 21px; font-weight: 600; color: white; }
+.app-header p { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
+.nav-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #2c2c2e; border-bottom: 0.5px solid #3a3a3c; position: sticky; top: 0; z-index: 10; }
+.nav-btn { background: #48484a; border: none; color: #c0bcf5; font-size: 26px; line-height: 1; width: 44px; height: 44px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.nav-btn:active { background: #636366; }
+.nav-title { font-size: 16px; font-weight: 600; color: #f2f2f7; text-align: center; flex: 1; }
+.list { background: #1c1c1e; padding: 10px 12px 32px; }
+.card { background: #2c2c2e; border-radius: 14px; margin-bottom: 10px; overflow: hidden; border: 0.5px solid #3a3a3c; }
+.card.is-today { border: 2px solid #9D97E8; }
+.card.is-empty { opacity: 0.3; }
+.card-inner { display: flex; min-height: 56px; }
+.date-col { width: 62px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; border-right: 0.5px solid #3a3a3c; background: #242426; }
+.date-dow { font-size: 10px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+.date-num { font-size: 26px; font-weight: 500; color: #f2f2f7; line-height: 1; }
+.date-num.today { color: #9D97E8; font-weight: 700; }
+.shift-col { width: 4px; flex-shrink: 0; }
+.shift-col.frueh    { background: #5DCAA5; }
+.shift-col.zwischen { background: #378ADD; }
+.shift-col.spaet    { background: #EF9F27; }
+.shift-col.nacht    { background: #9D97E8; }
+.shift-col.frei     { background: #7DBF3F; }
+.shift-col.urlaub   { background: #ED93B1; }
+.shift-col.none     { background: transparent; }
+.content-col { flex: 1; min-width: 0; padding: 11px 14px; display: flex; flex-direction: column; gap: 5px; justify-content: center; }
+.main-line { display: flex; align-items: center; justify-content: space-between; }
+.time-row { display: flex; align-items: baseline; flex: 1; min-width: 0; }
+.t-time  { font-size: 16px; font-weight: 500; color: #f2f2f7; white-space: nowrap; min-width: 115px; flex-shrink: 0; }
+.t-label { font-size: 16px; font-weight: 400; color: #8e8e93; }
+.t-label.event { color: #f2f2f7; }
+.urlaub-label { font-size: 15px; font-weight: 600; color: #ED93B1; }
+.wetter-chip { display: flex; align-items: center; gap: 3px; flex-shrink: 0; margin-left: 8px; }
+.wetter-chip .wi { font-size: 17px; line-height: 1; }
+.wetter-chip .wt { font-size: 13px; font-weight: 500; color: #f2f2f7; }
+.tag-row { display: flex; gap: 5px; flex-wrap: wrap; padding: 5px 14px 8px; border-top: 0.5px solid #3a3a3c; }
+.tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
+.tag-ferien   { background: #3d2e0f; color: #e8a84a; }
+.tag-feiertag { background: #0f2540; color: #5aabf5; }
+.footer { font-size: 10px; color: #636366; text-align: center; padding: 6px 12px 24px; }
+</style>
+</head>
+<body>
+<div class="app-header">
+  <h1>Papa's Kalender</h1>
+  <p id="hdr-sub"></p>
+</div>
+<div class="nav-bar">
+  <button class="nav-btn" onclick="go(-1)">&#8249;</button>
+  <span class="nav-title" id="nav-title"></span>
+  <button class="nav-btn" onclick="go(1)">&#8250;</button>
+</div>
+<div class="list" id="list"></div>
+<div class="footer" id="footer">&#127777; Wetter wird geladen&#8230;</div>
+<script>
+const SCHICHTEN={
+  '14':{von:'04:00',bis:'13:00',typ:'frueh'},'1':{von:'06:00',bis:'12:00',typ:'frueh'},
+  '9':{von:'06:00',bis:'14:12',typ:'frueh'},'11':{von:'06:00',bis:'13:00',typ:'frueh'},
+  '12':{von:'06:00',bis:'14:30',typ:'frueh'},'13':{von:'06:00',bis:'16:00',typ:'frueh'},
+  '3':{von:'06:30',bis:'13:00',typ:'frueh'},'10':{von:'06:30',bis:'14:30',typ:'frueh'},
+  '1005':{von:'06:30',bis:'15:00',typ:'frueh'},'2':{von:'07:00',bis:'12:00',typ:'frueh'},
+  '4':{von:'07:00',bis:'12:30',typ:'frueh'},'15':{von:'07:00',bis:'17:00',typ:'frueh'},
+  '16':{von:'07:00',bis:'15:12',typ:'frueh'},'223':{von:'07:00',bis:'17:00',typ:'zwischen'},
+  '226':{von:'07:00',bis:'15:00',typ:'zwischen'},'199':{von:'07:30',bis:'15:42',typ:'zwischen'},
+  '216':{von:'07:30',bis:'18:30',typ:'zwischen'},'220':{von:'07:30',bis:'16:00',typ:'zwischen'},
+  '227':{von:'07:30',bis:'15:12',typ:'zwischen'},'243':{von:'07:30',bis:'14:30',typ:'zwischen'},
+  '206':{von:'08:00',bis:'13:00',typ:'zwischen'},'213':{von:'08:00',bis:'14:00',typ:'zwischen'},
+  '221':{von:'08:00',bis:'15:30',typ:'zwischen'},'233':{von:'08:00',bis:'13:30',typ:'zwischen'},
+  '234':{von:'08:00',bis:'12:30',typ:'zwischen'},'235':{von:'08:00',bis:'17:00',typ:'zwischen'},
+  '236':{von:'08:00',bis:'15:00',typ:'zwischen'},'240':{von:'11:00',bis:'17:00',typ:'zwischen'},
+  '601':{von:'11:00',bis:'16:00',typ:'spaet'},'603':{von:'11:00',bis:'17:30',typ:'spaet'},
+  '600':{von:'11:30',bis:'19:45',typ:'spaet'},'611':{von:'12:48',bis:'20:00',typ:'spaet'},
+  '614':{von:'12:48',bis:'21:00',typ:'spaet'},'604':{von:'14:00',bis:'22:00',typ:'spaet'},
+  '609':{von:'15:00',bis:'21:00',typ:'spaet'},'605':{von:'16:00',bis:'21:00',typ:'spaet'},
+  '800':{von:'17:00',bis:'23:00',typ:'spaet'},'900':{von:'19:30',bis:'06:00',typ:'nacht'},
+  '910':{von:'20:00',bis:'00:00',typ:'nacht'},'907':{von:'21:00',bis:'05:45',typ:'nacht'},
+  '901':{von:'22:00',bis:'06:00',typ:'nacht'},
+  'FREI':{von:null,bis:null,typ:'frei'},'URLAUB':{von:null,bis:null,typ:'urlaub'}
+};
+const FERIEN=[
+  // 2025/26
+  {von:'2026-03-30',bis:'2026-04-11'},{von:'2026-05-26',bis:'2026-05-26'},
+  {von:'2026-07-20',bis:'2026-09-01'},{von:'2026-10-17',bis:'2026-10-31'},
+  {von:'2026-12-23',bis:'2027-01-06'},
+  // 2026/27
+  {von:'2027-03-22',bis:'2027-04-03'},{von:'2027-05-18',bis:'2027-05-18'},
+  {von:'2027-07-19',bis:'2027-09-01'},{von:'2027-10-23',bis:'2027-11-06'},
+  {von:'2027-12-24',bis:'2028-01-08'},
+  // 2027/28
+  {von:'2028-04-10',bis:'2028-04-22'},{von:'2028-07-10',bis:'2028-08-22'},
+  {von:'2028-10-23',bis:'2028-11-04'},{von:'2028-12-21',bis:'2029-01-05'},
+  // 2028/29
+  {von:'2029-03-26',bis:'2029-04-07'},{von:'2029-05-22',bis:'2029-05-22'},
+  {von:'2029-07-02',bis:'2029-08-14'},{von:'2029-10-15',bis:'2029-10-27'},
+  {von:'2029-12-20',bis:'2030-01-04'},
+  // 2029/30
+  {von:'2030-04-15',bis:'2030-04-27'}
+];
+const FT={
+  // 2026
+  '2026-01-01':'Neujahr','2026-04-03':'Karfreitag','2026-04-06':'Ostermontag',
+  '2026-05-01':'Tag der Arbeit','2026-05-14':'Christi Himmelfahrt',
+  '2026-05-25':'Pfingstmontag','2026-06-04':'Fronleichnam',
+  '2026-10-03':'Tag der Dt. Einheit','2026-11-01':'Allerheiligen',
+  '2026-12-25':'1. Weihnachtstag','2026-12-26':'2. Weihnachtstag',
+  // 2027 - Ostern 28.03.
+  '2027-01-01':'Neujahr','2027-03-26':'Karfreitag','2027-03-29':'Ostermontag',
+  '2027-05-01':'Tag der Arbeit','2027-05-06':'Christi Himmelfahrt',
+  '2027-05-17':'Pfingstmontag','2027-05-27':'Fronleichnam',
+  '2027-10-03':'Tag der Dt. Einheit','2027-11-01':'Allerheiligen',
+  '2027-12-25':'1. Weihnachtstag','2027-12-26':'2. Weihnachtstag',
+  // 2028 - Ostern 16.04.
+  '2028-01-01':'Neujahr','2028-04-14':'Karfreitag','2028-04-17':'Ostermontag',
+  '2028-05-01':'Tag der Arbeit','2028-05-25':'Christi Himmelfahrt',
+  '2028-06-04':'Pfingstmontag','2028-06-14':'Fronleichnam',
+  '2028-10-03':'Tag der Dt. Einheit','2028-11-01':'Allerheiligen',
+  '2028-12-25':'1. Weihnachtstag','2028-12-26':'2. Weihnachtstag',
+  // 2029 - Ostern 01.04.
+  '2029-01-01':'Neujahr','2029-03-30':'Karfreitag','2029-04-02':'Ostermontag',
+  '2029-05-01':'Tag der Arbeit','2029-05-10':'Christi Himmelfahrt',
+  '2029-05-21':'Pfingstmontag','2029-05-31':'Fronleichnam',
+  '2029-10-03':'Tag der Dt. Einheit','2029-11-01':'Allerheiligen',
+  '2029-12-25':'1. Weihnachtstag','2029-12-26':'2. Weihnachtstag',
+  // 2030 - Ostern 21.04.
+  '2030-01-01':'Neujahr','2030-04-19':'Karfreitag','2030-04-22':'Ostermontag',
+  '2030-05-01':'Tag der Arbeit','2030-05-30':'Christi Himmelfahrt',
+  '2030-06-10':'Pfingstmontag','2030-06-20':'Fronleichnam',
+  '2030-10-03':'Tag der Dt. Einheit','2030-11-01':'Allerheiligen',
+  '2030-12-25':'1. Weihnachtstag','2030-12-26':'2. Weihnachtstag'
+};
+const MO=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const WO=['So','Mo','Di','Mi','Do','Fr','Sa'];
+let KALENDER={},WETTER={};
+const _n=new Date(); let yr=_n.getFullYear(),mo=_n.getMonth();
+function pad(n){return String(n).padStart(2,'0');}
+function getFerien(d){for(const f of FERIEN){if(d>=f.von&&d<=f.bis)return true;}return false;}
+function go(dir){mo+=dir;if(mo<0){mo=11;yr--;}if(mo>11){mo=0;yr++;}render();}
+function wmoIcon(c,r){
+  if(c===0)return'☀️';if(c<=2)return'🌤';if(c===3)return'☁️';
+  if(c<=49)return'🌫';if(c<=67)return'🌧';if(c<=77)return'❄️';
+  if(c<=82)return'🌦';if(c<=84)return'🌨';if(c<=99)return'⛈';
+  return r>=70?'🌧':r>=40?'🌦':r>=20?'⛅':'🌤';
+}
+async function ladeWetter(){
+  try{
+    // Rheinbach 53359: lat 50.6200, lon 6.9500
+    // current = Echtzeit-Temperatur jetzt
+    // daily = Tagesvorhersage heute + 2 Tage (max temp, regen, wettercode)
+    const url='https://api.open-meteo.com/v1/forecast'
+      +'?latitude=50.6256&longitude=6.9491'
+      +'&current=temperature_2m,weathercode,precipitation'
+      +'&daily=temperature_2m_max,precipitation_probability_max,weathercode'
+      +'&timezone=Europe%2FBerlin&forecast_days=3';
+    const r=await fetch(url);
+    const d=await r.json();
+
+    // Echtzeit-Temperatur für Footer
+    const jetztTemp = Math.round(d.current.temperature_2m);
+    const jetztIcon = wmoIcon(d.current.weathercode, 0);
+
+    // Tages-Wetter für Kacheln (heute + 2 Tage)
+    d.daily.time.forEach((dt,i)=>{
+      WETTER[dt]={
+        temp: Math.round(d.daily.temperature_2m_max[i]),
+        icon: wmoIcon(d.daily.weathercode[i], d.daily.precipitation_probability_max[i])
+      };
+    });
+
+    document.getElementById('footer').textContent=
+      `${jetztIcon} Jetzt ${jetztTemp}° · Rheinbach · Live via Open-Meteo`;
+    render();
+  }catch(e){
+    document.getElementById('footer').textContent='⚠️ Wetter nicht verfügbar';
+  }
+}
+async function ladeKalender(){
+  try{const r=await fetch('kalender.json');const d=await r.json();KALENDER=d.schichten||{};}
+  catch(e){KALENDER=FALLBACK;}
+  render();ladeWetter();
+}
+function render(){
+  const lbl=MO[mo]+' '+yr;
+  document.getElementById('nav-title').textContent=lbl;
+  document.getElementById('hdr-sub').textContent=lbl;
+  const dim=new Date(yr,mo+1,0).getDate();
+  const now=new Date();
+  const list=document.getElementById('list');
+  list.innerHTML='';
+  for(let d=1;d<=dim;d++){
+    const ds=yr+'-'+pad(mo+1)+'-'+pad(d);
+    const dt=new Date(yr,mo,d);
+    const dow=dt.getDay();
+    const isToday=now.getFullYear()===yr&&now.getMonth()===mo&&now.getDate()===d;
+    const ft=FT[ds],fer=getFerien(ds);
+    const dd=KALENDER[ds]||{};
+    const s=dd.schicht?SCHICHTEN[dd.schicht]:null;
+    const evs=dd.events||[];
+    const w=WETTER[ds];
+
+    // Typ für Farbstreifen
+    const typ=s?s.typ:(dd.schicht==='FREI'?'frei':dd.schicht==='URLAUB'?'urlaub':'none');
+
+    // Ist der Tag komplett leer? (kein Schicht, keine Events, kein Feiertag, kein Ferien)
+    const isEmpty = !dd.schicht && !evs.length && !ft && !fer;
+
+    const card=document.createElement('div');
+    card.className='card'+(isToday?' is-today':isEmpty?' is-empty':'');
+
+    const wChip=w?`<div class="wetter-chip"><span class="wi">${w.icon}</span><span class="wt">${w.temp}°</span></div>`:'';
+    function zeile(zeit,label,ev){return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label${ev?' event':''}">${label}</span></div>`;}
+    function erste(inhalt){return`<div class="main-line">${inhalt}${wChip}</div>`;}
+
+    let h=`<div class="card-inner">
+      <div class="date-col">
+        <div class="date-dow">${WO[dow]}</div>
+        <div class="date-num${isToday?' today':''}">${d}</div>
+      </div>
+      <div class="shift-col ${typ}"></div>
+      <div class="content-col">`;
+
+    if(s&&s.von){
+      // Dienst mit Uhrzeit
+      h+=erste(zeile(s.von+' – '+s.bis,'Dienst',false));
+      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+    } else if(dd.schicht==='URLAUB'){
+      // Urlaub — nur Label + Wetter, keine Uhrzeit
+      h+=erste(`<div class="urlaub-label">Urlaub</div>`);
+      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+    } else if(dd.schicht==='FREI'||evs.length){
+      // Frei oder nur Termine — nur Events anzeigen, kein Label
+      if(evs.length){
+        h+=erste(zeile(evs[0].zeit||'',evs[0].text,true));
+        evs.slice(1).forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+      } else {
+        // FREI ohne Events — Wetter rechts, sonst leer
+        h+=erste('');
+      }
+    }
+    // Komplett leer: nichts ins content-col
+
+    h+=`</div></div>`;
+    if(ft||fer){
+      h+=`<div class="tag-row">
+        ${fer?'<span class="tag tag-ferien">Schulferien</span>':''}
+        ${ft?`<span class="tag tag-feiertag">${ft}</span>`:''}
+      </div>`;
+    }
+    card.innerHTML=h;
+    list.appendChild(card);
+  }
+}
+const FALLBACK={
+  "2026-05-01":{"schicht":"FREI","events":[]},"2026-05-04":{"schicht":"233","events":[]},
+  "2026-05-05":{"schicht":"233","events":[]},"2026-05-06":{"schicht":"233","events":[{"text":"Zahnarzt Rike","zeit":"15:30"}]},
+  "2026-05-07":{"schicht":"235","events":[]},"2026-05-08":{"schicht":"233","events":[{"text":"Elternabend","zeit":"19:00"}]},
+  "2026-05-11":{"schicht":"233","events":[]},"2026-05-12":{"schicht":"233","events":[{"text":"Arzt Rike","zeit":"15:00"}]},
+  "2026-05-13":{"schicht":"233","events":[]},"2026-05-14":{"schicht":"235","events":[]},
+  "2026-05-15":{"schicht":"FREI","events":[{"text":"Rike abholen","zeit":"18:00"}]},
+  "2026-05-17":{"schicht":"12","events":[]},"2026-05-18":{"schicht":"URLAUB","events":[]},
+  "2026-05-19":{"schicht":"URLAUB","events":[]},"2026-05-20":{"schicht":"URLAUB","events":[]},
+  "2026-05-21":{"schicht":"URLAUB","events":[]},"2026-05-22":{"schicht":"URLAUB","events":[]},
+  "2026-05-25":{"schicht":"600","events":[]},"2026-05-26":{"schicht":"233","events":[]},
+  "2026-05-27":{"schicht":"235","events":[]},"2026-05-28":{"schicht":"233","events":[{"text":"Familienfest","zeit":"16:00"},{"text":"Rike zurück","zeit":"20:00"}]},
+  "2026-05-29":{"schicht":"FREI","events":[]},"2026-05-31":{"schicht":"12","events":[]},
+  "2026-06-01":{"schicht":"233","events":[]},"2026-06-02":{"schicht":"233","events":[]},
+  "2026-06-03":{"schicht":"233","events":[]},"2026-06-04":{"schicht":"FREI","events":[]},
+  "2026-06-05":{"schicht":"233","events":[]},"2026-06-07":{"schicht":"12","events":[]},
+  "2026-06-08":{"schicht":"233","events":[]},"2026-06-09":{"schicht":"233","events":[]},
+  "2026-06-10":{"schicht":"233","events":[]},"2026-06-11":{"schicht":"235","events":[]},
+  "2026-06-12":{"schicht":"233","events":[]},"2026-06-15":{"schicht":"233","events":[]},
+  "2026-06-16":{"schicht":"233","events":[]},"2026-06-17":{"schicht":"233","events":[]},
+  "2026-06-18":{"schicht":"235","events":[]},"2026-06-19":{"schicht":"233","events":[]},
+  "2026-06-21":{"schicht":"12","events":[]},"2026-06-22":{"schicht":"233","events":[]},
+  "2026-06-23":{"schicht":"233","events":[]},"2026-06-24":{"schicht":"233","events":[]},
+  "2026-06-25":{"schicht":"235","events":[]},"2026-06-26":{"schicht":"233","events":[]},
+  "2026-06-28":{"schicht":"12","events":[]},"2026-06-29":{"schicht":"233","events":[]},
+  "2026-06-30":{"schicht":"233","events":[]}
+};
+ladeKalender();
+</script>
+</body>
+</html>

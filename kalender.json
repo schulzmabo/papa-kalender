@@ -1,0 +1,208 @@
+{
+  "meta": {
+    "titel": "Papa's Kalender",
+    "erstellt": "2026-05-04",
+    "daten_gueltig_bis": "2030-12-31"
+  },
+  "schichten": {
+    "2026-05-01": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-05-04": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-05": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-06": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-08": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-11": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-12": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-13": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Therapie Rike · Villa Rolandseck",
+          "zeit": "17:00"
+        }
+      ]
+    },
+    "2026-05-14": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-05-15": {
+      "schicht": "URLAUB",
+      "events": []
+    },
+    "2026-05-17": {
+      "schicht": "1",
+      "events": []
+    },
+    "2026-05-18": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-19": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-21": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Ortho Rike",
+          "zeit": "10:00"
+        }
+      ]
+    },
+    "2026-05-22": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-25": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-05-26": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-27": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-28": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-29": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-01": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-02": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-03": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-04": {
+      "schicht": "FREI",
+      "events": []
+    },
+    "2026-06-05": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-07": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-08": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-09": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-10": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-11": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-06-12": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-15": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-16": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-17": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-18": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-06-19": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-21": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-22": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-23": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-24": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-25": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-06-26": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-28": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-29": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-30": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-10-19": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Zahnarzt Rike",
+          "zeit": "09:00"
+        }
+      ]
+    }
+  }
+}
