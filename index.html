@@ -187,7 +187,7 @@ async function ladeWetter(){
   }
 }
 async function ladeKalender(){
-  try{const r=await fetch('https://www.dropbox.com/scl/fi/nbr87f9d2cvboebzafax5/kalender.json?rlkey=czanflvk4fj8svmgyy8w141vc&dl=1');const d=await r.json();KALENDER=d.schichten||{};}
+  try{const r=await fetch('https://dl.dropboxusercontent.com/scl/fi/nbr87f9d2cvboebzafax5/kalender.json?rlkey=czanflvk4fj8svmgyy8w141vc&dl=1');const d=await r.json();KALENDER=d.schichten||{};}
   catch(e){KALENDER=FALLBACK;}
   render();ladeWetter();
 }
