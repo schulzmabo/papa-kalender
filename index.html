@@ -217,7 +217,8 @@ function render(){
     const isEmpty = !dd.schicht && !evs.length && !ft && !fer;
 
     const card=document.createElement('div');
-    card.className='card'+(isToday?' is-today':isEmpty?' is-empty':'');
+    const isWE = dow===0||dow===6;
+    card.className='card'+(isToday?' is-today':'')+( isWE&&isEmpty?' is-weekend':(!isWE&&isEmpty?' is-empty':''));
 
     const wChip=w?`<div class="wetter-chip"><span class="wi">${w.icon}</span><span class="wt">${w.temp}°</span></div>`:'';
     function zeile(zeit,label,ev){return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label${ev?' event':''}">${label}</span></div>`;}
