@@ -26,6 +26,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .date-dow { font-size: 10px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .date-num { font-size: 26px; font-weight: 500; color: #f2f2f7; line-height: 1; }
 .date-num.today { color: #9D97E8; font-weight: 700; }
+.card.is-weekend .date-dow { color: #E8A84A; }
+.card.is-weekend .date-num { color: #E8A84A; }
 .shift-col { width: 4px; flex-shrink: 0; }
 .shift-col.frueh    { background: #5DCAA5; }
 .shift-col.zwischen { background: #378ADD; }
@@ -185,7 +187,7 @@ async function ladeWetter(){
   }
 }
 async function ladeKalender(){
-  try{const r=await fetch('kalender.json');const d=await r.json();KALENDER=d.schichten||{};}
+  try{const r=await fetch('https://www.dropbox.com/scl/fi/nbr87f9d2cvboebzafax5/kalender.json?rlkey=czanflvk4fj8svmgyy8w141vc&dl=1');const d=await r.json();KALENDER=d.schichten||{};}
   catch(e){KALENDER=FALLBACK;}
   render();ladeWetter();
 }
