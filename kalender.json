@@ -50,7 +50,9 @@
       {"text": "Elternsprechtag Fr. Sch\u00e4fer", "zeit": "16:50", "who": "rike"},
       {"text": "Elternsprechtag Fr. Etabia",  "zeit": "17:10", "who": "rike"}
     ]},
-    "2026-05-21": {"schicht": "233",    "events": []},
+    "2026-05-21": {"schicht": "233",    "events": [
+      {"text": "Orthop\u00e4de Rike", "zeit": "10:00", "who": "rike"}
+    ]},
     "2026-05-22": {"schicht": "233",    "events": []},
     "2026-05-25": {"schicht": "12",     "events": []},
     "2026-05-26": {"schicht": "235",    "events": []},
