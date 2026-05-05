@@ -8,9 +8,10 @@
 <meta name="apple-mobile-web-app-title" content="Papa">
 <title>Papa's Kalender</title>
 <style>
+/* ── ORIGINAL STYLE (unveraenderlich) ── */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif; background: #1c1c1e; color: #f2f2f7; }
-.app-header { background: #7F77DD; padding: 18px 16px 14px; text-align: center; }
+.app-header { background: #7F77DD; padding: 18px 16px 14px; text-align: center; position: relative; }
 .app-header h1 { font-size: 21px; font-weight: 600; color: white; }
 .app-header p { font-size: 12px; color: rgba(255,255,255,0.75); margin-top: 2px; }
 .nav-bar { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; background: #2c2c2e; border-bottom: 0.5px solid #3a3a3c; position: sticky; top: 0; z-index: 10; }
@@ -21,13 +22,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .card { background: #2c2c2e; border-radius: 14px; margin-bottom: 10px; overflow: hidden; border: 0.5px solid #3a3a3c; }
 .card.is-today { border: 2px solid #9D97E8; }
 .card.is-empty { opacity: 0.3; }
+.card.is-weekend .date-dow { color: #E8A84A; }
+.card.is-weekend .date-num { color: #E8A84A; }
 .card-inner { display: flex; min-height: 56px; }
 .date-col { width: 62px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; border-right: 0.5px solid #3a3a3c; background: #242426; }
 .date-dow { font-size: 10px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
 .date-num { font-size: 26px; font-weight: 500; color: #f2f2f7; line-height: 1; }
 .date-num.today { color: #9D97E8; font-weight: 700; }
-.card.is-weekend .date-dow { color: #E8A84A; }
-.card.is-weekend .date-num { color: #E8A84A; }
 .shift-col { width: 4px; flex-shrink: 0; }
 .shift-col.frueh    { background: #5DCAA5; }
 .shift-col.zwischen { background: #378ADD; }
@@ -51,178 +52,357 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .tag-ferien   { background: #3d2e0f; color: #e8a84a; }
 .tag-feiertag { background: #0f2540; color: #5aabf5; }
 .footer { font-size: 10px; color: #636366; text-align: center; padding: 6px 12px 24px; }
+/* ── who-Badge (neu, minimal, im Stil) ── */
+.who-badge { font-size: 10px; padding: 1px 5px; border-radius: 5px; font-weight: 600; margin-left: 6px; }
+.who-rike  { background: rgba(93,202,165,.18); color: #5DCAA5; }
+.who-papa  { background: rgba(157,151,232,.18); color: #9D97E8; }
+
+/* ── HEADER EXTENSIONS: View-Badge + Admin-Button ── */
+.hdr-badge { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 11px; background: rgba(255,255,255,.2); color: #fff; padding: 3px 9px; border-radius: 10px; font-weight: 600; }
+.hdr-admin { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); background: rgba(255,255,255,.2); border: none; color: #fff; padding: 7px 12px; border-radius: 10px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.hdr-admin:active { background: rgba(255,255,255,.35); }
+
+/* ── MONTH TABS ── */
+.month-tabs { display: flex; gap: 5px; overflow-x: auto; padding: 8px 12px; background: #1c1c1e; scrollbar-width: none; border-bottom: 0.5px solid #3a3a3c; }
+.month-tabs::-webkit-scrollbar { display: none; }
+.mtab { flex-shrink: 0; padding: 5px 10px; border-radius: 14px; font-size: 12px; font-weight: 500; cursor: pointer; border: 1px solid #3a3a3c; color: #8e8e93; background: none; white-space: nowrap; }
+.mtab.active { background: #7F77DD; color: #fff; border-color: #7F77DD; }
+.mtab.hd { border-color: #534AB7; color: #c0bcf5; }
+
+/* ── SEARCH ── */
+.sbar { display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #2c2c2e; border-bottom: 0.5px solid #3a3a3c; }
+.sinput { flex: 1; background: #3a3a3c; border: none; color: #f2f2f7; padding: 8px 12px; border-radius: 10px; font-size: 14px; font-family: inherit; }
+.sinput::placeholder { color: #636366; }
+.sinput:focus { outline: none; background: #48484a; }
+.sclear { background: none; border: none; color: #8e8e93; font-size: 18px; cursor: pointer; padding: 4px; display: none; }
+.sres { padding: 10px 12px 32px; }
+.sri { background: #2c2c2e; border-radius: 14px; margin-bottom: 10px; padding: 12px 14px; border: 0.5px solid #3a3a3c; cursor: pointer; }
+.sri:active { opacity: .7; }
+.srd { font-size: 11px; color: #8e8e93; margin-bottom: 4px; }
+.srt { font-size: 16px; font-weight: 400; color: #f2f2f7; }
+.srz { font-size: 13px; color: #8e8e93; margin-top: 2px; }
+
+/* ── MAMA VIEW ── */
+.mlist { padding: 10px 12px 32px; }
+.mi { background: #2c2c2e; border-radius: 14px; margin-bottom: 10px; overflow: hidden; border: 0.5px solid #3a3a3c; display: flex; min-height: 56px; }
+.mi.today { border: 2px solid #9D97E8; }
+.mdc { width: 62px; flex-shrink: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 8px; border-right: 0.5px solid #3a3a3c; background: #242426; }
+.mddow { font-size: 10px; font-weight: 600; color: #8e8e93; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 2px; }
+.mdday { font-size: 26px; font-weight: 500; color: #f2f2f7; line-height: 1; }
+.mdmon { font-size: 10px; color: #8e8e93; margin-top: 2px; }
+.mcc { flex: 1; padding: 11px 14px; display: flex; flex-direction: column; gap: 4px; justify-content: center; }
+.mev { font-size: 16px; font-weight: 400; color: #f2f2f7; }
+.mzeit { font-size: 13px; color: #8e8e93; }
+.empty-msg { text-align: center; color: #636366; padding: 40px 0; font-size: 14px; }
+
+/* ── ADMIN OVERLAY ── */
+.ao { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.82); z-index: 200; overflow-y: auto; }
+.ao.open { display: block; }
+.ap { background: #1c1c1e; min-height: 100vh; padding-bottom: 60px; }
+.ah { background: #534AB7; padding: 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 10; }
+.ah h2 { font-size: 17px; font-weight: 600; color: #fff; }
+.xbtn { background: none; border: none; color: rgba(255,255,255,.8); font-size: 24px; cursor: pointer; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+.asec { padding: 16px; }
+.asec h3 { font-size: 11px; font-weight: 600; color: #8e8e93; margin-bottom: 12px; text-transform: uppercase; letter-spacing: .6px; }
+.fg { margin-bottom: 12px; }
+.fg label { display: block; font-size: 12px; color: #8e8e93; margin-bottom: 5px; }
+.fg input, .fg select { width: 100%; background: #2c2c2e; border: 0.5px solid #48484a; color: #f2f2f7; padding: 11px 13px; border-radius: 10px; font-size: 15px; font-family: inherit; }
+.fg input:focus, .fg select:focus { outline: none; border-color: #7F77DD; }
+.fg select option { background: #2c2c2e; }
+.hint { font-size: 11px; color: #636366; margin-top: 4px; display: block; }
+.btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 15px; font-weight: 600; cursor: pointer; }
+.bp { background: #7F77DD; color: #fff; }
+.bs { background: #2c2c2e; color: #f2f2f7; border: 0.5px solid #48484a; }
+.bg { background: #1a5c3a; color: #5DCAA5; }
+.btn:active { opacity: .8; }
+.btn.pushing { opacity: .6; pointer-events: none; }
+.mb8 { margin-bottom: 8px; }
+.div { height: 0.5px; background: #3a3a3c; }
+.sca { border: 1.5px dashed #48484a; border-radius: 12px; padding: 20px; text-align: center; cursor: pointer; }
+.sca:active { border-color: #7F77DD; }
+.scai { font-size: 30px; margin-bottom: 6px; }
+.scal { font-size: 13px; color: #8e8e93; }
+.scaprev { max-width: 100%; border-radius: 8px; margin-top: 10px; display: none; }
+.aib { background: #2c2c2e; border-radius: 10px; padding: 12px; margin-top: 10px; display: none; }
+.ail { font-size: 10px; color: #636366; margin-bottom: 5px; text-transform: uppercase; letter-spacing: .5px; }
+.ait { font-size: 14px; color: #f2f2f7; line-height: 1.6; }
+.ghs { padding: 9px 12px; border-radius: 10px; font-size: 13px; margin-bottom: 12px; }
+.ghok { background: rgba(93,202,165,.12); color: #5DCAA5; }
+.ghnone { background: #2c2c2e; color: #636366; }
+.delrow { display: flex; align-items: center; justify-content: space-between; padding: 9px 11px; background: #2c2c2e; border-radius: 10px; margin-bottom: 6px; }
+.delrow span { font-size: 13px; color: #f2f2f7; }
+.delx { background: #3b1a1a; border: none; color: #e05252; padding: 4px 10px; border-radius: 7px; font-size: 12px; cursor: pointer; font-weight: 600; }
+.toast { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #3a3a3c; color: #f2f2f7; padding: 10px 20px; border-radius: 20px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
+.toast.show { opacity: 1; }
+
+/* ── VIEW TINTS ── */
+.view-rike .app-header { background: #1a4a3a; }
+.view-rike .hdr-admin  { display: none; }
+.view-mama .app-header { background: #2d1a50; }
+.view-mama .hdr-admin  { display: none; }
+.view-mama .nav-bar    { display: none; }
 </style>
 </head>
 <body>
+
 <div class="app-header">
-  <h1>Papa's Kalender</h1>
-  <p id="hdr-sub"></p>
+  <span class="hdr-badge" id="vbadge">Papa</span>
+  <h1 id="atitle">Papa's Kalender</h1>
+  <p id="asub"></p>
+  <button class="hdr-admin" id="adminBtn" onclick="openAdmin()">+ Termin</button>
 </div>
-<div class="nav-bar">
+
+<div class="month-tabs" id="mtabs"></div>
+
+<div class="sbar">
+  <input class="sinput" id="sq" type="search" placeholder="&#128269; Suchen..." oninput="onSearch(this.value)">
+  <button class="sclear" id="sclear" onclick="clearSearch()">&#10005;</button>
+</div>
+
+<div class="nav-bar" id="navBar">
   <button class="nav-btn" onclick="go(-1)">&#8249;</button>
-  <span class="nav-title" id="nav-title"></span>
+  <span class="nav-title" id="ntitle"></span>
   <button class="nav-btn" onclick="go(1)">&#8250;</button>
 </div>
-<div class="list" id="list"></div>
-<div class="footer" id="footer">&#127777; Wetter wird geladen&#8230;</div>
+
+<div class="list"  id="list"></div>
+<div class="mlist" id="mlist" style="display:none"></div>
+<div class="sres"  id="sres"  style="display:none"></div>
+<div class="footer" id="footer">&#9203; Wetter wird geladen&#8230;</div>
+
+<!-- ADMIN PANEL -->
+<div class="ao" id="ao">
+<div class="ap">
+  <div class="ah"><h2>Termine verwalten</h2><button class="xbtn" onclick="closeAdmin()">&#10005;</button></div>
+
+  <div class="asec">
+    <h3>Termin tippen</h3>
+    <div class="fg"><label>Datum</label><input type="date" id="evDate"></div>
+    <div class="fg"><label>Termin</label><input type="text" id="evText" placeholder="z.B. Arzt Rike"></div>
+    <div class="fg"><label>Uhrzeit (optional)</label><input type="time" id="evTime"></div>
+    <div class="fg"><label>F&#252;r wen</label>
+      <select id="evWho"><option value="rike">Rike</option><option value="papa">Papa</option><option value="">Beide</option></select>
+      <span class="hint">Mama sieht nur Rike-Termine</span>
+    </div>
+    <button class="btn bp" onclick="addEvent()">Termin eintragen</button>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="asec">
+    <h3>Bild scannen (KI)</h3>
+    <div class="sca" onclick="document.getElementById('sci').click()">
+      <input type="file" id="sci" accept="image/*" style="display:none" onchange="handleScan(event)">
+      <div class="scai">&#128247;</div>
+      <div class="scal">Foto eines Termins antippen</div>
+      <img id="scaprev" class="scaprev">
+    </div>
+    <div class="aib" id="aib"><div class="ail">KI hat erkannt</div><div class="ait" id="ait"></div></div>
+    <button class="btn bs" id="aiBtn" style="display:none;margin-top:8px" onclick="applyAi()">Felder &#252;bernehmen</button>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="asec">
+    <h3>Termin l&#246;schen</h3>
+    <div class="fg"><label>Datum</label><input type="date" id="delDate" oninput="renderDelList()"></div>
+    <div id="delList"></div>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="asec">
+    <h3>GitHub Einstellungen</h3>
+    <div class="ghs ghnone" id="ghStat">Noch nicht eingerichtet</div>
+    <div class="fg"><label>GitHub Username</label><input type="text" id="ghUser" placeholder="schulzmabo" oninput="saveGhCfg()"></div>
+    <div class="fg"><label>Repository</label><input type="text" id="ghRepo" placeholder="papa-kalender" oninput="saveGhCfg()"></div>
+    <div class="fg"><label>Personal Access Token</label>
+      <input type="password" id="ghToken" placeholder="github_pat_..." oninput="saveGhCfg()">
+      <span class="hint">Settings &#8594; Developer settings &#8594; Fine-grained tokens &#8594; Contents: Read+Write</span>
+    </div>
+    <button class="btn bs mb8" onclick="testGh()">Verbindung testen</button>
+    <div id="ghout" style="font-size:13px;margin-top:8px;display:none;color:#8e8e93"></div>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="asec">
+    <h3>GitHub Sync</h3>
+    <p style="font-size:13px;color:#8e8e93;margin-bottom:12px">Wird nach jedem Eintrag automatisch gespeichert.</p>
+    <button class="btn bg mb8" id="pushBtn" onclick="pushToGh()"><span id="pushLbl">Jetzt auf GitHub speichern</span></button>
+    <button class="btn bs mb8" onclick="pullFromGh(false)">Von GitHub laden</button>
+    <button class="btn bs" onclick="downloadJSON()">Als Datei herunterladen (Backup)</button>
+  </div>
+
+  <div class="div"></div>
+
+  <div class="asec">
+    <h3>JSON lokal importieren</h3>
+    <input type="file" id="jfile" accept=".json" style="display:none" onchange="loadJSON(event)">
+    <button class="btn bs" onclick="document.getElementById('jfile').click()">kalender.json &#246;ffnen</button>
+  </div>
+</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
 <script>
 const SCHICHTEN={
   '14':{von:'04:00',bis:'13:00',typ:'frueh'},'1':{von:'06:00',bis:'12:00',typ:'frueh'},
   '9':{von:'06:00',bis:'14:12',typ:'frueh'},'11':{von:'06:00',bis:'13:00',typ:'frueh'},
   '12':{von:'06:00',bis:'14:30',typ:'frueh'},'13':{von:'06:00',bis:'16:00',typ:'frueh'},
-  '3':{von:'06:30',bis:'13:00',typ:'frueh'},'10':{von:'06:30',bis:'14:30',typ:'frueh'},
-  '1005':{von:'06:30',bis:'15:00',typ:'frueh'},'2':{von:'07:00',bis:'12:00',typ:'frueh'},
+  'F':{von:'06:00',bis:'14:12',typ:'frueh'},'3':{von:'06:30',bis:'13:00',typ:'frueh'},
+  '10':{von:'06:30',bis:'14:30',typ:'frueh'},'1005':{von:'06:30',bis:'15:00',typ:'frueh'},
+  'FB1':{von:'06:30',bis:'14:42',typ:'frueh'},'2':{von:'07:00',bis:'12:00',typ:'frueh'},
   '4':{von:'07:00',bis:'12:30',typ:'frueh'},'15':{von:'07:00',bis:'17:00',typ:'frueh'},
-  '16':{von:'07:00',bis:'15:12',typ:'frueh'},'223':{von:'07:00',bis:'17:00',typ:'zwischen'},
-  '226':{von:'07:00',bis:'15:00',typ:'zwischen'},'199':{von:'07:30',bis:'15:42',typ:'zwischen'},
-  '216':{von:'07:30',bis:'18:30',typ:'zwischen'},'220':{von:'07:30',bis:'16:00',typ:'zwischen'},
-  '227':{von:'07:30',bis:'15:12',typ:'zwischen'},'243':{von:'07:30',bis:'14:30',typ:'zwischen'},
+  '16':{von:'07:00',bis:'15:12',typ:'frueh'},'FB3':{von:'07:00',bis:'15:12',typ:'frueh'},
+  '223':{von:'07:00',bis:'17:00',typ:'zwischen'},'226':{von:'07:00',bis:'15:00',typ:'zwischen'},
+  '199':{von:'07:30',bis:'15:42',typ:'zwischen'},'216':{von:'07:30',bis:'18:30',typ:'zwischen'},
+  '220':{von:'07:30',bis:'16:00',typ:'zwischen'},'227':{von:'07:30',bis:'15:12',typ:'zwischen'},
+  '243':{von:'07:30',bis:'14:30',typ:'zwischen'},'FB2':{von:'07:30',bis:'15:42',typ:'zwischen'},
+  'FM':{von:'07:30',bis:'15:42',typ:'zwischen'},'Z':{von:'07:30',bis:'15:48',typ:'zwischen'},
   '206':{von:'08:00',bis:'13:00',typ:'zwischen'},'213':{von:'08:00',bis:'14:00',typ:'zwischen'},
-  '221':{von:'08:00',bis:'15:30',typ:'zwischen'},'233':{von:'08:00',bis:'13:30',typ:'zwischen'},
-  '234':{von:'08:00',bis:'12:30',typ:'zwischen'},'235':{von:'08:00',bis:'17:00',typ:'zwischen'},
-  '236':{von:'08:00',bis:'15:00',typ:'zwischen'},'240':{von:'11:00',bis:'17:00',typ:'zwischen'},
+  '217':{von:'08:00',bis:'12:00',typ:'zwischen'},'221':{von:'08:00',bis:'15:30',typ:'zwischen'},
+  '233':{von:'08:00',bis:'13:30',typ:'zwischen'},'234':{von:'08:00',bis:'12:30',typ:'zwischen'},
+  '235':{von:'08:00',bis:'17:00',typ:'zwischen'},'236':{von:'08:00',bis:'15:00',typ:'zwischen'},
+  '237':{von:'08:00',bis:'12:00',typ:'zwischen'},'THO':{von:'08:00',bis:'16:12',typ:'zwischen'},
+  'Z1':{von:'08:00',bis:'16:12',typ:'zwischen'},'215':{von:'08:15',bis:'15:30',typ:'zwischen'},
+  '229':{von:'08:15',bis:'13:45',typ:'zwischen'},'231':{von:'08:15',bis:'14:15',typ:'zwischen'},
+  '201':{von:'08:30',bis:'16:30',typ:'zwischen'},'202':{von:'08:30',bis:'13:30',typ:'zwischen'},
+  '203':{von:'08:30',bis:'15:30',typ:'zwischen'},'205':{von:'08:30',bis:'14:30',typ:'zwischen'},
+  '219':{von:'08:30',bis:'14:00',typ:'zwischen'},'230':{von:'08:30',bis:'16:00',typ:'zwischen'},
+  '238':{von:'08:30',bis:'14:00',typ:'zwischen'},'241':{von:'08:30',bis:'19:15',typ:'zwischen'},
+  '44':{von:'08:30',bis:'12:30',typ:'zwischen'},'208':{von:'08:45',bis:'14:45',typ:'zwischen'},
+  '214':{von:'08:45',bis:'15:00',typ:'zwischen'},'225':{von:'08:45',bis:'16:00',typ:'zwischen'},
+  '207':{von:'09:00',bis:'13:00',typ:'zwischen'},'210':{von:'09:00',bis:'15:00',typ:'zwischen'},
+  '211':{von:'09:00',bis:'14:00',typ:'zwischen'},'224':{von:'09:00',bis:'19:00',typ:'zwischen'},
+  '209':{von:'09:30',bis:'15:30',typ:'zwischen'},'212':{von:'10:00',bis:'15:00',typ:'zwischen'},
+  '222':{von:'10:00',bis:'18:00',typ:'zwischen'},'240':{von:'11:00',bis:'17:00',typ:'zwischen'},
   '601':{von:'11:00',bis:'16:00',typ:'spaet'},'603':{von:'11:00',bis:'17:30',typ:'spaet'},
-  '600':{von:'11:30',bis:'19:45',typ:'spaet'},'611':{von:'12:48',bis:'20:00',typ:'spaet'},
-  '614':{von:'12:48',bis:'21:00',typ:'spaet'},'604':{von:'14:00',bis:'22:00',typ:'spaet'},
-  '609':{von:'15:00',bis:'21:00',typ:'spaet'},'605':{von:'16:00',bis:'21:00',typ:'spaet'},
-  '800':{von:'17:00',bis:'23:00',typ:'spaet'},'900':{von:'19:30',bis:'06:00',typ:'nacht'},
-  '910':{von:'20:00',bis:'00:00',typ:'nacht'},'907':{von:'21:00',bis:'05:45',typ:'nacht'},
-  '901':{von:'22:00',bis:'06:00',typ:'nacht'},
+  '607':{von:'11:00',bis:'15:00',typ:'spaet'},'600':{von:'11:30',bis:'19:45',typ:'spaet'},
+  '621':{von:'12:00',bis:'20:12',typ:'spaet'},'611':{von:'12:48',bis:'20:00',typ:'spaet'},
+  '614':{von:'12:48',bis:'21:00',typ:'spaet'},'617':{von:'12:48',bis:'21:00',typ:'spaet'},
+  '604':{von:'14:00',bis:'22:00',typ:'spaet'},'608':{von:'14:00',bis:'21:00',typ:'spaet'},
+  '609':{von:'15:00',bis:'21:00',typ:'spaet'},'616':{von:'15:00',bis:'22:00',typ:'spaet'},
+  '799':{von:'15:00',bis:'00:15',typ:'spaet'},'605':{von:'16:00',bis:'21:00',typ:'spaet'},
+  '612':{von:'16:00',bis:'23:00',typ:'spaet'},'610':{von:'18:00',bis:'00:00',typ:'spaet'},
+  '800':{von:'17:00',bis:'23:00',typ:'spaet'},
+  '900':{von:'19:30',bis:'06:00',typ:'nacht'},'906':{von:'19:30',bis:'05:45',typ:'nacht'},
+  '916':{von:'19:45',bis:'01:00',typ:'nacht'},'910':{von:'20:00',bis:'00:00',typ:'nacht'},
+  '914':{von:'20:00',bis:'05:35',typ:'nacht'},'902':{von:'20:15',bis:'06:30',typ:'nacht'},
+  '912':{von:'20:20',bis:'05:35',typ:'nacht'},'915':{von:'20:20',bis:'06:35',typ:'nacht'},
+  'N':{von:'20:20',bis:'06:35',typ:'nacht'},'907':{von:'21:00',bis:'05:45',typ:'nacht'},
+  '901':{von:'22:00',bis:'06:00',typ:'nacht'},'908':{von:'22:00',bis:'05:45',typ:'nacht'},
   'FREI':{von:null,bis:null,typ:'frei'},'URLAUB':{von:null,bis:null,typ:'urlaub'}
 };
 const FERIEN=[
-  // 2025/26
   {von:'2026-03-30',bis:'2026-04-11'},{von:'2026-05-26',bis:'2026-05-26'},
   {von:'2026-07-20',bis:'2026-09-01'},{von:'2026-10-17',bis:'2026-10-31'},
-  {von:'2026-12-23',bis:'2027-01-06'},
-  // 2026/27
-  {von:'2027-03-22',bis:'2027-04-03'},{von:'2027-05-18',bis:'2027-05-18'},
-  {von:'2027-07-19',bis:'2027-09-01'},{von:'2027-10-23',bis:'2027-11-06'},
-  {von:'2027-12-24',bis:'2028-01-08'},
-  // 2027/28
+  {von:'2026-12-23',bis:'2027-01-06'},{von:'2027-03-22',bis:'2027-04-03'},
+  {von:'2027-05-18',bis:'2027-05-18'},{von:'2027-07-19',bis:'2027-09-01'},
+  {von:'2027-10-23',bis:'2027-11-06'},{von:'2027-12-24',bis:'2028-01-08'},
   {von:'2028-04-10',bis:'2028-04-22'},{von:'2028-07-10',bis:'2028-08-22'},
   {von:'2028-10-23',bis:'2028-11-04'},{von:'2028-12-21',bis:'2029-01-05'},
-  // 2028/29
   {von:'2029-03-26',bis:'2029-04-07'},{von:'2029-05-22',bis:'2029-05-22'},
   {von:'2029-07-02',bis:'2029-08-14'},{von:'2029-10-15',bis:'2029-10-27'},
-  {von:'2029-12-20',bis:'2030-01-04'},
-  // 2029/30
-  {von:'2030-04-15',bis:'2030-04-27'}
+  {von:'2029-12-20',bis:'2030-01-04'},{von:'2030-04-15',bis:'2030-04-27'}
 ];
-const FT={
-  // 2026
-  '2026-01-01':'Neujahr','2026-04-03':'Karfreitag','2026-04-06':'Ostermontag',
-  '2026-05-01':'Tag der Arbeit','2026-05-14':'Christi Himmelfahrt',
-  '2026-05-25':'Pfingstmontag','2026-06-04':'Fronleichnam',
-  '2026-10-03':'Tag der Dt. Einheit','2026-11-01':'Allerheiligen',
-  '2026-12-25':'1. Weihnachtstag','2026-12-26':'2. Weihnachtstag',
-  // 2027 - Ostern 28.03.
-  '2027-01-01':'Neujahr','2027-03-26':'Karfreitag','2027-03-29':'Ostermontag',
-  '2027-05-01':'Tag der Arbeit','2027-05-06':'Christi Himmelfahrt',
-  '2027-05-17':'Pfingstmontag','2027-05-27':'Fronleichnam',
-  '2027-10-03':'Tag der Dt. Einheit','2027-11-01':'Allerheiligen',
-  '2027-12-25':'1. Weihnachtstag','2027-12-26':'2. Weihnachtstag',
-  // 2028 - Ostern 16.04.
-  '2028-01-01':'Neujahr','2028-04-14':'Karfreitag','2028-04-17':'Ostermontag',
-  '2028-05-01':'Tag der Arbeit','2028-05-25':'Christi Himmelfahrt',
-  '2028-06-04':'Pfingstmontag','2028-06-14':'Fronleichnam',
-  '2028-10-03':'Tag der Dt. Einheit','2028-11-01':'Allerheiligen',
-  '2028-12-25':'1. Weihnachtstag','2028-12-26':'2. Weihnachtstag',
-  // 2029 - Ostern 01.04.
-  '2029-01-01':'Neujahr','2029-03-30':'Karfreitag','2029-04-02':'Ostermontag',
-  '2029-05-01':'Tag der Arbeit','2029-05-10':'Christi Himmelfahrt',
-  '2029-05-21':'Pfingstmontag','2029-05-31':'Fronleichnam',
-  '2029-10-03':'Tag der Dt. Einheit','2029-11-01':'Allerheiligen',
-  '2029-12-25':'1. Weihnachtstag','2029-12-26':'2. Weihnachtstag',
-  // 2030 - Ostern 21.04.
-  '2030-01-01':'Neujahr','2030-04-19':'Karfreitag','2030-04-22':'Ostermontag',
-  '2030-05-01':'Tag der Arbeit','2030-05-30':'Christi Himmelfahrt',
-  '2030-06-10':'Pfingstmontag','2030-06-20':'Fronleichnam',
-  '2030-10-03':'Tag der Dt. Einheit','2030-11-01':'Allerheiligen',
-  '2030-12-25':'1. Weihnachtstag','2030-12-26':'2. Weihnachtstag'
-};
-const MO=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const FT={'2026-01-01':'Neujahr','2026-04-03':'Karfreitag','2026-04-06':'Ostermontag','2026-05-01':'Tag der Arbeit','2026-05-14':'Christi Himmelfahrt','2026-05-25':'Pfingstmontag','2026-06-04':'Fronleichnam','2026-10-03':'Tag der Dt. Einheit','2026-11-01':'Allerheiligen','2026-12-25':'1. Weihnachtstag','2026-12-26':'2. Weihnachtstag','2027-01-01':'Neujahr','2027-03-26':'Karfreitag','2027-03-29':'Ostermontag','2027-05-01':'Tag der Arbeit','2027-05-06':'Christi Himmelfahrt','2027-05-17':'Pfingstmontag','2027-05-27':'Fronleichnam','2027-10-03':'Tag der Dt. Einheit','2027-11-01':'Allerheiligen','2027-12-25':'1. Weihnachtstag','2027-12-26':'2. Weihnachtstag','2028-01-01':'Neujahr','2028-04-14':'Karfreitag','2028-04-17':'Ostermontag','2028-05-01':'Tag der Arbeit','2028-05-25':'Christi Himmelfahrt','2028-06-04':'Pfingstmontag','2028-06-14':'Fronleichnam','2028-10-03':'Tag der Dt. Einheit','2028-11-01':'Allerheiligen','2028-12-25':'1. Weihnachtstag','2028-12-26':'2. Weihnachtstag','2029-01-01':'Neujahr','2029-03-30':'Karfreitag','2029-04-02':'Ostermontag','2029-05-01':'Tag der Arbeit','2029-05-10':'Christi Himmelfahrt','2029-05-21':'Pfingstmontag','2029-05-31':'Fronleichnam','2029-10-03':'Tag der Dt. Einheit','2029-11-01':'Allerheiligen','2029-12-25':'1. Weihnachtstag','2029-12-26':'2. Weihnachtstag','2030-01-01':'Neujahr','2030-04-19':'Karfreitag','2030-04-22':'Ostermontag','2030-05-01':'Tag der Arbeit','2030-05-30':'Christi Himmelfahrt','2030-06-10':'Pfingstmontag','2030-06-20':'Fronleichnam','2030-10-03':'Tag der Dt. Einheit','2030-11-01':'Allerheiligen','2030-12-25':'1. Weihnachtstag','2030-12-26':'2. Weihnachtstag'};
+const MO=['Januar','Februar','M\u00e4rz','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const MK=['Jan','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'];
 const WO=['So','Mo','Di','Mi','Do','Fr','Sa'];
-let KALENDER={},WETTER={};
-const _n=new Date(); let yr=_n.getFullYear(),mo=_n.getMonth();
+
+let KAL={},WET={},view='papa',yr,mo,ghSha=null,aiP=null,sq='';
+
 function pad(n){return String(n).padStart(2,'0');}
-function getFerien(d){for(const f of FERIEN){if(d>=f.von&&d<=f.bis)return true;}return false;}
-function go(dir){mo+=dir;if(mo<0){mo=11;yr--;}if(mo>11){mo=0;yr++;}render();}
+function getFer(d){for(const f of FERIEN){if(d>=f.von&&d<=f.bis)return true;}return false;}
 function wmoIcon(c,r){
-  if(c===0)return'☀️';if(c<=2)return'🌤';if(c===3)return'☁️';
-  if(c<=49)return'🌫';if(c<=67)return'🌧';if(c<=77)return'❄️';
-  if(c<=82)return'🌦';if(c<=84)return'🌨';if(c<=99)return'⛈';
-  return r>=70?'🌧':r>=40?'🌦':r>=20?'⛅':'🌤';
+  if(c===0)return'\u2600\uFE0F';if(c<=2)return'\uD83C\uDF24';if(c===3)return'\u2601\uFE0F';
+  if(c<=49)return'\uD83C\uDF2B';if(c<=67)return'\uD83C\uDF27';if(c<=77)return'\u2744\uFE0F';
+  if(c<=82)return'\uD83C\uDF26';if(c<=84)return'\uD83C\uDF28';return'\u26C8\uFE0F';
 }
-async function ladeWetter(){
-  try{
-    // Rheinbach 53359: lat 50.6200, lon 6.9500
-    // current = Echtzeit-Temperatur jetzt
-    // daily = Tagesvorhersage heute + 2 Tage (max temp, regen, wettercode)
-    const url='https://api.open-meteo.com/v1/forecast'
-      +'?latitude=50.6256&longitude=6.9491'
-      +'&current=temperature_2m,weathercode,precipitation'
-      +'&daily=temperature_2m_max,precipitation_probability_max,weathercode'
-      +'&timezone=Europe%2FBerlin&forecast_days=3';
-    const r=await fetch(url);
-    const d=await r.json();
 
-    // Echtzeit-Temperatur für Footer
-    const jetztTemp = Math.round(d.current.temperature_2m);
-    const jetztIcon = wmoIcon(d.current.weathercode, 0);
+function initView(){
+  const p=new URLSearchParams(window.location.search);
+  view=p.get('view')||'papa';
+  document.body.className='view-'+view;
+  const T={papa:"Papa's Kalender",rike:"Rike's Kalender",mama:"Kalender"};
+  const B={papa:"Papa",rike:"Rike",mama:"Mama"};
+  document.getElementById('atitle').textContent=T[view];
+  document.getElementById('vbadge').textContent=B[view];
+  if(view!=='papa')document.getElementById('adminBtn').style.display='none';
+}
 
-    // Tages-Wetter für Kacheln (heute + 2 Tage)
-    d.daily.time.forEach((dt,i)=>{
-      WETTER[dt]={
-        temp: Math.round(d.daily.temperature_2m_max[i]),
-        icon: wmoIcon(d.daily.weathercode[i], d.daily.precipitation_probability_max[i])
-      };
-    });
+function ldSt(){try{const s=localStorage.getItem('kd');if(s)KAL=JSON.parse(s).schichten||{};}catch(e){}}
+function svSt(){try{localStorage.setItem('kd',JSON.stringify({schichten:KAL}));}catch(e){}}
 
-    document.getElementById('footer').textContent=
-      `${jetztIcon} Jetzt ${jetztTemp}° · Rheinbach · Live via Open-Meteo`;
+function renderTabs(){
+  const tabs=document.getElementById('mtabs');tabs.innerHTML='';
+  for(let m=0;m<12;m++){
+    const hd=Object.keys(KAL).some(ds=>ds.startsWith(yr+'-'+pad(m+1)));
+    const btn=document.createElement('button');
+    btn.className='mtab'+(m===mo?' active':hd?' hd':'');
+    btn.textContent=MK[m];
+    btn.onclick=()=>{mo=m;renderTabs();renderAll();};
+    tabs.appendChild(btn);
+  }
+  const a=tabs.querySelector('.active');
+  if(a)a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+}
+
+function go(dir){mo+=dir;if(mo<0){mo=11;yr--;}if(mo>11){mo=0;yr++;}renderTabs();renderAll();}
+
+function renderAll(){
+  if(sq.trim().length>1){renderSearch(sq);return;}
+  if(view==='mama'){
+    document.getElementById('list').style.display='none';
+    document.getElementById('mlist').style.display='block';
+    document.getElementById('sres').style.display='none';
+    document.getElementById('navBar').style.display='none';
+    renderMama();
+  } else {
+    document.getElementById('list').style.display='block';
+    document.getElementById('mlist').style.display='none';
+    document.getElementById('sres').style.display='none';
+    document.getElementById('navBar').style.display='flex';
     render();
-  }catch(e){
-    document.getElementById('footer').textContent='⚠️ Wetter nicht verfügbar';
   }
 }
-async function ladeKalender(){
-  try{const r=await fetch('kalender.json');const d=await r.json();KALENDER=d.schichten||{};}
-  catch(e){KALENDER=FALLBACK;}
-  render();ladeWetter();
-}
+
 function render(){
   const lbl=MO[mo]+' '+yr;
-  document.getElementById('nav-title').textContent=lbl;
-  document.getElementById('hdr-sub').textContent=lbl;
+  document.getElementById('ntitle').textContent=lbl;
+  document.getElementById('asub').textContent=lbl;
   const dim=new Date(yr,mo+1,0).getDate();
   const now=new Date();
-  const list=document.getElementById('list');
-  list.innerHTML='';
+  const list=document.getElementById('list');list.innerHTML='';
   for(let d=1;d<=dim;d++){
     const ds=yr+'-'+pad(mo+1)+'-'+pad(d);
     const dt=new Date(yr,mo,d);
     const dow=dt.getDay();
+    const isWE=dow===0||dow===6;
     const isToday=now.getFullYear()===yr&&now.getMonth()===mo&&now.getDate()===d;
-    const ft=FT[ds],fer=getFerien(ds);
-    const dd=KALENDER[ds]||{};
+    const ft=FT[ds],fer=getFer(ds);
+    const dd=KAL[ds]||{};
     const s=dd.schicht?SCHICHTEN[dd.schicht]:null;
     const evs=dd.events||[];
-    const w=WETTER[ds];
-
-    // Typ für Farbstreifen
+    const w=WET[ds];
     const typ=s?s.typ:(dd.schicht==='FREI'?'frei':dd.schicht==='URLAUB'?'urlaub':'none');
-
-    // Ist der Tag komplett leer? (kein Schicht, keine Events, kein Feiertag, kein Ferien)
-    const isEmpty = !dd.schicht && !evs.length && !ft && !fer;
+    const isEmpty=!dd.schicht&&!evs.length&&!ft&&!fer;
 
     const card=document.createElement('div');
-    const isWE = dow===0||dow===6;
-    card.className='card'+(isToday?' is-today':'')+( isWE&&isEmpty?' is-weekend':(!isWE&&isEmpty?' is-empty':''));
+    let cls='card';
+    if(isToday) cls+=' is-today';
+    else if(isEmpty) cls+=' is-empty';
+    if(isWE) cls+=' is-weekend';
+    card.className=cls;
 
-    const wChip=w?`<div class="wetter-chip"><span class="wi">${w.icon}</span><span class="wt">${w.temp}°</span></div>`:'';
-    function zeile(zeit,label,ev){return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label${ev?' event':''}">${label}</span></div>`;}
-    function erste(inhalt){return`<div class="main-line">${inhalt}${wChip}</div>`;}
+    const wc=w?`<div class="wetter-chip"><span class="wi">${w.icon}</span><span class="wt">${w.temp}\u00b0</span></div>`:'';
+    function zeile(zeit,label,ev,who){
+      const wb=(view==='papa'&&who)?`<span class="who-badge who-${who}">${who}</span>`:'';
+      return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label${ev?' event':''}">${label}</span>${wb}</div>`;
+    }
+    function erste(c){return`<div class="main-line">${c}${wc}</div>`;}
 
     let h=`<div class="card-inner">
       <div class="date-col">
@@ -233,24 +413,19 @@ function render(){
       <div class="content-col">`;
 
     if(s&&s.von){
-      // Dienst mit Uhrzeit
-      h+=erste(zeile(s.von+' – '+s.bis,'Dienst',false));
-      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+      h+=erste(zeile(s.von+' \u2013 '+s.bis,'Dienst',false,''));
+      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
     } else if(dd.schicht==='URLAUB'){
-      // Urlaub — nur Label + Wetter, keine Uhrzeit
       h+=erste(`<div class="urlaub-label">Urlaub</div>`);
-      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
     } else if(dd.schicht==='FREI'||evs.length){
-      // Frei oder nur Termine — nur Events anzeigen, kein Label
       if(evs.length){
-        h+=erste(zeile(evs[0].zeit||'',evs[0].text,true));
-        evs.slice(1).forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true);});
+        h+=erste(zeile(evs[0].zeit||'',evs[0].text,true,evs[0].who||''));
+        evs.slice(1).forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
       } else {
-        // FREI ohne Events — Wetter rechts, sonst leer
         h+=erste('');
       }
     }
-    // Komplett leer: nichts ins content-col
 
     h+=`</div></div>`;
     if(ft||fer){
@@ -259,38 +434,315 @@ function render(){
         ${ft?`<span class="tag tag-feiertag">${ft}</span>`:''}
       </div>`;
     }
-    card.innerHTML=h;
-    list.appendChild(card);
+    card.innerHTML=h;list.appendChild(card);
+  }
+  if(!list.children.length)list.innerHTML='<p class="empty-msg">Keine Eintr\u00e4ge f\u00fcr diesen Monat</p>';
+}
+
+/* ── MAMA VIEW ── */
+function renderMama(){
+  document.getElementById('asub').textContent="Rike's Termine";
+  const ml=document.getElementById('mlist');ml.innerHTML='';
+  const now=new Date();const tod=now.toISOString().split('T')[0];
+  const all=[];
+  Object.keys(KAL).sort().forEach(ds=>{
+    (KAL[ds].events||[]).forEach(ev=>{
+      if(!ev.who||ev.who==='rike')all.push({ds,ev});
+    });
+  });
+  if(!all.length){ml.innerHTML='<p class="empty-msg">Keine Rike-Termine eingetragen</p>';return;}
+  all.forEach(({ds,ev})=>{
+    const dt=new Date(ds);const isT=ds===tod;
+    const item=document.createElement('div');
+    item.className='mi'+(isT?' today':'');
+    item.innerHTML=`<div class="mdc"><div class="mddow">${WO[dt.getDay()]}</div><div class="mdday">${dt.getDate()}</div><div class="mdmon">${MK[dt.getMonth()]}</div></div><div class="mcc"><div class="mev">${ev.text}</div>${ev.zeit?`<div class="mzeit">${ev.zeit} Uhr</div>`:''}</div>`;
+    ml.appendChild(item);
+  });
+}
+
+/* ── SEARCH ── */
+function onSearch(q){
+  sq=q;
+  document.getElementById('sclear').style.display=q?'block':'none';
+  if(q.trim().length>1){
+    document.getElementById('list').style.display='none';
+    document.getElementById('mlist').style.display='none';
+    document.getElementById('sres').style.display='block';
+    document.getElementById('navBar').style.display='none';
+    renderSearch(q);
+  } else {
+    document.getElementById('sres').style.display='none';
+    renderAll();
   }
 }
+function clearSearch(){document.getElementById('sq').value='';onSearch('');}
+function renderSearch(q){
+  const sq2=q.toLowerCase();const sr=document.getElementById('sres');sr.innerHTML='';
+  const hits=[];
+  Object.keys(KAL).sort().forEach(ds=>{
+    const dd=KAL[ds]||{};
+    const evs=(dd.events||[]).filter(ev=>{
+      if(view==='mama')return(!ev.who||ev.who==='rike')&&ev.text.toLowerCase().includes(sq2);
+      return ev.text.toLowerCase().includes(sq2);
+    });
+    const sm=dd.schicht&&dd.schicht.toLowerCase().includes(sq2);
+    if(evs.length)evs.forEach(ev=>hits.push({ds,text:ev.text,zeit:ev.zeit}));
+    else if(sm&&view!=='mama'){const s=SCHICHTEN[dd.schicht];hits.push({ds,text:'Dienst '+dd.schicht,zeit:s?s.von+'\u2013'+s.bis:''});}
+  });
+  if(!hits.length){sr.innerHTML=`<p class="empty-msg">Keine Ergebnisse f\u00fcr \u201e${q}\u201c</p>`;return;}
+  hits.forEach(h=>{
+    const dt=new Date(h.ds);
+    const dl=WO[dt.getDay()]+', '+dt.getDate()+'. '+MO[dt.getMonth()]+' '+dt.getFullYear();
+    const div=document.createElement('div');
+    div.className='sri';
+    div.innerHTML=`<div class="srd">${dl}</div><div class="srt">${h.text}</div>${h.zeit?`<div class="srz">${h.zeit}</div>`:''}`;
+    div.onclick=()=>{yr=dt.getFullYear();mo=dt.getMonth();clearSearch();renderTabs();renderAll();};
+    sr.appendChild(div);
+  });
+}
+
+/* ── WETTER ── */
+async function ladeWetter(){
+  try{
+    const url='https://api.open-meteo.com/v1/forecast?latitude=50.6256&longitude=6.9491&current=temperature_2m,weathercode,precipitation&daily=temperature_2m_max,precipitation_probability_max,weathercode&timezone=Europe%2FBerlin&forecast_days=3';
+    const r=await fetch(url);const d=await r.json();
+    const jT=Math.round(d.current.temperature_2m);
+    d.daily.time.forEach((dt,i)=>{WET[dt]={temp:Math.round(d.daily.temperature_2m_max[i]),icon:wmoIcon(d.daily.weathercode[i],d.daily.precipitation_probability_max[i])};});
+    document.getElementById('footer').textContent=`${wmoIcon(d.current.weathercode,0)} Jetzt ${jT}\u00b0 \u00b7 Rheinbach \u00b7 Live via Open-Meteo`;
+    renderAll();
+  }catch(e){document.getElementById('footer').textContent='\u26a0\uFE0F Wetter nicht verf\u00fcgbar';}
+}
+
+/* ── ADMIN ── */
+function openAdmin(){
+  document.getElementById('ao').classList.add('open');
+  const t=new Date().toISOString().split('T')[0];
+  document.getElementById('evDate').value=t;
+  document.getElementById('delDate').value=t;
+  renderDelList();loadGhCfg();
+}
+function closeAdmin(){document.getElementById('ao').classList.remove('open');}
+
+function addEvent(){
+  const ds=document.getElementById('evDate').value;
+  const text=document.getElementById('evText').value.trim();
+  const time=document.getElementById('evTime').value;
+  const who=document.getElementById('evWho').value;
+  if(!ds||!text){showToast('Bitte Datum und Text eingeben');return;}
+  if(!KAL[ds])KAL[ds]={schicht:null,events:[]};
+  if(!KAL[ds].events)KAL[ds].events=[];
+  const ev={text};if(time)ev.zeit=time;if(who)ev.who=who;
+  KAL[ds].events.push(ev);svSt();autoSync();
+  showToast('\u2713 Termin eingetragen');
+  document.getElementById('evText').value='';document.getElementById('evTime').value='';
+  const[y,m]=ds.split('-').map(Number);yr=y;mo=m-1;renderTabs();renderAll();
+}
+
+function renderDelList(){
+  const ds=document.getElementById('delDate').value;
+  const div=document.getElementById('delList');
+  const evs=(KAL[ds]?.events)||[];
+  if(!evs.length){div.innerHTML='<p style="font-size:13px;color:#636366">Keine Termine an diesem Tag</p>';return;}
+  div.innerHTML=evs.map((ev,i)=>`<div class="delrow"><span>${ev.zeit?ev.zeit+' ':''}${ev.text}</span><button class="delx" onclick="delEv('${ds}',${i})">&#10005;</button></div>`).join('');
+}
+function delEv(ds,idx){
+  KAL[ds].events.splice(idx,1);
+  if(!KAL[ds].events.length&&!KAL[ds].schicht)delete KAL[ds];
+  svSt();autoSync();renderDelList();renderAll();showToast('Termin gel\u00f6scht');
+}
+
+/* ── AI SCAN ── */
+async function handleScan(e){
+  const file=e.target.files[0];if(!file)return;
+  const prev=document.getElementById('scaprev');prev.style.display='block';prev.src=URL.createObjectURL(file);
+  document.getElementById('aib').style.display='block';
+  document.getElementById('ait').textContent='\u29d7 KI liest Termin...';
+  document.getElementById('aiBtn').style.display='none';
+  const b64=await f2b64(file);const mt=file.type||'image/jpeg';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:500,
+        messages:[{role:'user',content:[
+          {type:'image',source:{type:'base64',media_type:mt,data:b64}},
+          {type:'text',text:`Lies alle Termine aus diesem Bild. NUR JSON-Array (kein Markdown):
+[{"datum":"YYYY-MM-DD","text":"Beschreibung","zeit":"HH:MM oder leer","who":"rike oder papa oder leer"}]
+Jahr fehlt: nehme ${new Date().getFullYear()}. Heute: ${new Date().toISOString().split('T')[0]}`}
+        ]}]})});
+    const data=await res.json();
+    const txt=data.content?.find(c=>c.type==='text')?.text||'[]';
+    aiP=JSON.parse(txt.replace(/```json|```/g,'').trim());
+    if(!Array.isArray(aiP))aiP=[aiP];
+    document.getElementById('ait').innerHTML=aiP.map(a=>`<b>${a.datum||'?'}</b> ${a.zeit||''} ${a.text||'?'}`).join('<br>');
+    document.getElementById('aiBtn').style.display='block';
+  }catch(e){document.getElementById('ait').textContent='Fehler \u2014 bitte manuell eingeben.';}
+}
+function applyAi(){
+  if(!aiP||!aiP.length)return;
+  // Alle erkannten Termine auf einmal eintragen
+  let n=0;
+  aiP.forEach(a=>{
+    if(!a.datum||!a.text)return;
+    if(!KAL[a.datum])KAL[a.datum]={schicht:null,events:[]};
+    if(!KAL[a.datum].events)KAL[a.datum].events=[];
+    const ev={text:a.text};
+    if(a.zeit)ev.zeit=a.zeit;
+    if(a.who)ev.who=a.who;
+    KAL[a.datum].events.push(ev);n++;
+  });
+  if(n){svSt();autoSync();renderTabs();renderAll();showToast('\u2713 '+n+' Termin(e) eingetragen');}
+  document.getElementById('aiBtn').style.display='none';
+}
+function f2b64(file){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(file);});}
+
+/* ── GITHUB ── */
+function getGh(){return{u:document.getElementById('ghUser')?.value.trim()||'',r:document.getElementById('ghRepo')?.value.trim()||'',t:document.getElementById('ghToken')?.value.trim()||''};}
+function saveGhCfg(){const c=getGh();try{localStorage.setItem('gh_cfg',JSON.stringify({user:c.u,repo:c.r,token:c.t}));}catch(e){}updGhSt();}
+function loadGhCfg(){
+  try{const c=JSON.parse(localStorage.getItem('gh_cfg')||'{}');
+    if(c.user)document.getElementById('ghUser').value=c.user;
+    if(c.repo)document.getElementById('ghRepo').value=c.repo;
+    if(c.token)document.getElementById('ghToken').value=c.token;
+  }catch(e){}updGhSt();
+}
+function updGhSt(){
+  const s=document.getElementById('ghStat');if(!s)return;
+  const c=getGh();
+  if(c.u&&c.r&&c.t){s.className='ghs ghok';s.textContent='\u2713 '+c.u+'/'+c.r;}
+  else{s.className='ghs ghnone';s.textContent='Noch nicht eingerichtet';}
+}
+function ghUrl(c){return`https://api.github.com/repos/${c.u}/${c.r}/contents/kalender.json`;}
+function ghHdr(c){return{'Authorization':'token '+c.t,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};}
+async function testGh(){
+  const c=getGh();const r=document.getElementById('ghout');
+  r.style.display='block';r.style.color='#8e8e93';r.textContent='\u29d7 Verbinde...';
+  if(!c.u||!c.r||!c.t){r.style.color='#e05252';r.textContent='\u2717 Alle Felder ausf\u00fcllen';return;}
+  try{
+    const res=await fetch(ghUrl(c),{headers:ghHdr(c)});
+    if(res.ok){const d=await res.json();ghSha=d.sha;r.style.color='#5DCAA5';r.textContent='\u2713 Verbindung OK';}
+    else if(res.status===404){r.style.color='#EF9F27';r.textContent='\u26a0 kalender.json fehlt \u2014 wird beim Speichern erstellt';ghSha=null;}
+    else if(res.status===401){r.style.color='#e05252';r.textContent='\u2717 Token ung\u00fcltig';}
+    else{r.style.color='#e05252';r.textContent='\u2717 HTTP '+res.status;}
+  }catch(e){r.style.color='#e05252';r.textContent='\u2717 Netzwerkfehler';}
+}
+function bldJson(){return{meta:{titel:"Papa's Kalender",erstellt:new Date().toISOString().split('T')[0],daten_gueltig_bis:"2030-12-31"},schichten:KAL};}
+async function pushToGh(){
+  const c=getGh();if(!c.u||!c.r||!c.t){showToast('GitHub-Einstellungen fehlen');return;}
+  const btn=document.getElementById('pushBtn');const lbl=document.getElementById('pushLbl');
+  btn.classList.add('pushing');lbl.textContent='\u29d7 Wird gespeichert...';
+  try{
+    if(!ghSha){const ck=await fetch(ghUrl(c),{headers:ghHdr(c)});if(ck.ok){const d=await ck.json();ghSha=d.sha;}}
+    const b64=btoa(unescape(encodeURIComponent(JSON.stringify(bldJson(),null,2))));
+    const body={message:'Update '+new Date().toLocaleString('de-DE'),content:b64};if(ghSha)body.sha=ghSha;
+    const res=await fetch(ghUrl(c),{method:'PUT',headers:ghHdr(c),body:JSON.stringify(body)});
+    if(res.ok){const d=await res.json();ghSha=d.content?.sha||ghSha;showToast('\u2713 Auf GitHub gespeichert');lbl.textContent='\u2713 Gespeichert';setTimeout(()=>{lbl.textContent='Jetzt auf GitHub speichern';},2500);}
+    else{const er=await res.json();showToast('\u2717 '+(er.message||res.status));lbl.textContent='Jetzt auf GitHub speichern';}
+  }catch(e){showToast('\u2717 Netzwerkfehler');lbl.textContent='Jetzt auf GitHub speichern';}
+  btn.classList.remove('pushing');
+}
+async function pullFromGh(silent){
+  const c=getGh();if(!c.u||!c.r||!c.t){if(!silent)showToast('GitHub-Einstellungen fehlen');return;}
+  if(!silent)showToast('\u29d7 Lade...');
+  try{
+    const res=await fetch(ghUrl(c),{headers:ghHdr(c)});
+    if(res.ok){const data=await res.json();ghSha=data.sha;
+      const p=JSON.parse(decodeURIComponent(escape(atob(data.content.replace(/\n/g,'')))));
+      if(p.schichten){KAL=p.schichten;svSt();renderTabs();renderAll();if(!silent)showToast('\u2713 Von GitHub geladen');}
+    }else if(!silent)showToast('\u2717 Nicht gefunden');
+  }catch(e){if(!silent)showToast('\u2717 '+e.message);}
+}
+async function autoSync(){const c=getGh();if(c.u&&c.r&&c.t)await pushToGh();}
+function downloadJSON(){
+  const blob=new Blob([JSON.stringify(bldJson(),null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');
+  a.href=url;a.download='kalender.json';a.click();URL.revokeObjectURL(url);showToast('\u2713 heruntergeladen');
+}
+function loadJSON(event){
+  const file=event.target.files[0];if(!file)return;
+  const r=new FileReader();
+  r.onload=e=>{try{const d=JSON.parse(e.target.result);
+    if(d.schichten){KAL=d.schichten;svSt();renderTabs();renderAll();showToast('\u2713 geladen');closeAdmin();}
+    else showToast('Ung\u00fcltiges Format');}catch(e){showToast('Fehler');}};
+  r.readAsText(file);
+}
+
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
 const FALLBACK={
-  "2026-05-01":{"schicht":"FREI","events":[]},"2026-05-04":{"schicht":"233","events":[]},
-  "2026-05-05":{"schicht":"233","events":[]},"2026-05-06":{"schicht":"233","events":[{"text":"Zahnarzt Rike","zeit":"15:30"}]},
-  "2026-05-07":{"schicht":"235","events":[]},"2026-05-08":{"schicht":"233","events":[{"text":"Elternabend","zeit":"19:00"}]},
-  "2026-05-11":{"schicht":"233","events":[]},"2026-05-12":{"schicht":"233","events":[{"text":"Arzt Rike","zeit":"15:00"}]},
-  "2026-05-13":{"schicht":"233","events":[]},"2026-05-14":{"schicht":"235","events":[]},
-  "2026-05-15":{"schicht":"FREI","events":[{"text":"Rike abholen","zeit":"18:00"}]},
-  "2026-05-17":{"schicht":"12","events":[]},"2026-05-18":{"schicht":"URLAUB","events":[]},
-  "2026-05-19":{"schicht":"URLAUB","events":[]},"2026-05-20":{"schicht":"URLAUB","events":[]},
-  "2026-05-21":{"schicht":"URLAUB","events":[]},"2026-05-22":{"schicht":"URLAUB","events":[]},
-  "2026-05-25":{"schicht":"600","events":[]},"2026-05-26":{"schicht":"233","events":[]},
-  "2026-05-27":{"schicht":"235","events":[]},"2026-05-28":{"schicht":"233","events":[{"text":"Familienfest","zeit":"16:00"},{"text":"Rike zurück","zeit":"20:00"}]},
-  "2026-05-29":{"schicht":"FREI","events":[]},"2026-05-31":{"schicht":"12","events":[]},
-  "2026-06-01":{"schicht":"233","events":[]},"2026-06-02":{"schicht":"233","events":[]},
-  "2026-06-03":{"schicht":"233","events":[]},"2026-06-04":{"schicht":"FREI","events":[]},
-  "2026-06-05":{"schicht":"233","events":[]},"2026-06-07":{"schicht":"12","events":[]},
-  "2026-06-08":{"schicht":"233","events":[]},"2026-06-09":{"schicht":"233","events":[]},
-  "2026-06-10":{"schicht":"233","events":[]},"2026-06-11":{"schicht":"235","events":[]},
-  "2026-06-12":{"schicht":"233","events":[]},"2026-06-15":{"schicht":"233","events":[]},
-  "2026-06-16":{"schicht":"233","events":[]},"2026-06-17":{"schicht":"233","events":[]},
-  "2026-06-18":{"schicht":"235","events":[]},"2026-06-19":{"schicht":"233","events":[]},
-  "2026-06-21":{"schicht":"12","events":[]},"2026-06-22":{"schicht":"233","events":[]},
-  "2026-06-23":{"schicht":"233","events":[]},"2026-06-24":{"schicht":"233","events":[]},
-  "2026-06-25":{"schicht":"235","events":[]},"2026-06-26":{"schicht":"233","events":[]},
-  "2026-06-28":{"schicht":"12","events":[]},"2026-06-29":{"schicht":"233","events":[]},
+  "2026-04-01":{"schicht":null,"events":[{"text":"Krankengymnastik Lisa-Marie L\u00e4mbgen","zeit":"15:00","who":"rike"}]},
+  "2026-04-08":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"17:10","who":"rike"}]},
+  "2026-04-22":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"15:15","who":"rike"}]},
+  "2026-04-29":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"16:25","who":"rike"}]},
+  "2026-05-01":{"schicht":"12","events":[]},
+  "2026-05-04":{"schicht":"233","events":[]},
+  "2026-05-05":{"schicht":"235","events":[]},
+  "2026-05-06":{"schicht":"233","events":[]},
+  "2026-05-07":{"schicht":"233","events":[]},
+  "2026-05-08":{"schicht":"233","events":[]},
+  "2026-05-11":{"schicht":"233","events":[{"text":"Wahl 4. Hauptfach / Elternsprechtag","zeit":"19:00","who":"rike"}]},
+  "2026-05-12":{"schicht":"235","events":[]},
+  "2026-05-13":{"schicht":"233","events":[{"text":"Krankengymnastik (Nora Bartocha)","zeit":"15:15","who":"rike"},{"text":"Therapie Rolands Eck","zeit":"17:30","who":"rike"}]},
+  "2026-05-14":{"schicht":"12","events":[]},
+  "2026-05-15":{"schicht":"URLAUB","events":[]},
+  "2026-05-16":{"schicht":null,"events":[{"text":"Geburtstagsparty Sinit","zeit":"16:00","who":"rike"}]},
+  "2026-05-17":{"schicht":"1","events":[{"text":"Ende Party Sinit","zeit":"10:00","who":"rike"}]},
+  "2026-05-18":{"schicht":"233","events":[]},
+  "2026-05-19":{"schicht":"235","events":[]},
+  "2026-05-20":{"schicht":"235","events":[{"text":"Krankengymnastik (Nora Bartocha)","zeit":"15:15","who":"rike"},{"text":"Elternsprechtag Fr. Sch\u00e4fer","zeit":"16:50","who":"rike"},{"text":"Elternsprechtag Fr. Etabia","zeit":"17:10","who":"rike"}]},
+  "2026-05-21":{"schicht":"233","events":[]},
+  "2026-05-22":{"schicht":"233","events":[]},
+  "2026-05-25":{"schicht":"12","events":[]},
+  "2026-05-26":{"schicht":"235","events":[]},
+  "2026-05-27":{"schicht":"233","events":[]},
+  "2026-05-28":{"schicht":"233","events":[]},
+  "2026-05-29":{"schicht":"233","events":[]},
+  "2026-06-01":{"schicht":"233","events":[]},
+  "2026-06-02":{"schicht":"233","events":[]},
+  "2026-06-03":{"schicht":"233","events":[]},
+  "2026-06-04":{"schicht":"FREI","events":[]},
+  "2026-06-05":{"schicht":"233","events":[]},
+  "2026-06-07":{"schicht":"12","events":[]},
+  "2026-06-08":{"schicht":"233","events":[]},
+  "2026-06-09":{"schicht":"233","events":[]},
+  "2026-06-10":{"schicht":"233","events":[]},
+  "2026-06-11":{"schicht":"235","events":[]},
+  "2026-06-12":{"schicht":"233","events":[]},
+  "2026-06-15":{"schicht":"233","events":[]},
+  "2026-06-16":{"schicht":"233","events":[]},
+  "2026-06-17":{"schicht":"233","events":[]},
+  "2026-06-18":{"schicht":"235","events":[]},
+  "2026-06-19":{"schicht":"233","events":[]},
+  "2026-06-21":{"schicht":"12","events":[]},
+  "2026-06-22":{"schicht":"233","events":[]},
+  "2026-06-23":{"schicht":"233","events":[]},
+  "2026-06-24":{"schicht":"233","events":[]},
+  "2026-06-25":{"schicht":"235","events":[]},
+  "2026-06-26":{"schicht":"233","events":[]},
+  "2026-06-28":{"schicht":"12","events":[]},
+  "2026-06-29":{"schicht":"233","events":[]},
   "2026-06-30":{"schicht":"233","events":[]}
 };
-ladeKalender();
+
+async function ladeKalender(){
+  try{const r=await fetch('kalender.json');const d=await r.json();KAL=d.schichten||{};svSt();}
+  catch(e){KAL=FALLBACK;svSt();}
+  try{const s=localStorage.getItem('kd');if(s){const ld=JSON.parse(s).schichten||{};Object.assign(KAL,ld);}}catch(e){}
+}
+
+function init(){
+  initView();
+  const now=new Date();yr=now.getFullYear();mo=now.getMonth();
+  try{const c=JSON.parse(localStorage.getItem('gh_cfg')||'{}');
+    if(c.user&&document.getElementById('ghUser'))document.getElementById('ghUser').value=c.user;
+    if(c.repo&&document.getElementById('ghRepo'))document.getElementById('ghRepo').value=c.repo;
+    if(c.token&&document.getElementById('ghToken'))document.getElementById('ghToken').value=c.token;
+  }catch(e){}
+  ldSt();
+  ladeKalender().then(()=>{
+    const c=getGh();if(view==='papa'&&c.u&&c.r&&c.t)pullFromGh(true);
+    renderTabs();renderAll();ladeWetter();
+  });
+}
+init();
 </script>
 </body>
 </html>
