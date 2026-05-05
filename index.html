@@ -595,25 +595,28 @@ function applyAi(){
 function f2b64(file){return new Promise((r,j)=>{const rd=new FileReader();rd.onload=()=>r(rd.result.split(',')[1]);rd.onerror=j;rd.readAsDataURL(file);});}
 
 /* ── GITHUB ── */
+// Zentrale Konfiguration — wird beim Start geladen, DOM ist nur Anzeige
+let _ghCfg = {u:'',r:'',t:''};
+(function(){try{const c=JSON.parse(localStorage.getItem('gh_cfg')||'{}');_ghCfg={u:c.user||'',r:c.repo||'',t:c.token||''};}catch(e){}})();
+
 function getGh(){
-  const u=document.getElementById('ghUser')?.value.trim()||'';
-  const r=document.getElementById('ghRepo')?.value.trim()||'';
-  const t=document.getElementById('ghToken')?.value.trim()||'';
-  if(u&&r&&t)return{u,r,t};
-  try{const c=JSON.parse(localStorage.getItem('gh_cfg')||'{}');
-    return{u:u||c.user||'',r:r||c.repo||'',t:t||c.token||''};}
-  catch(e){return{u,r,t};}
+  // DOM-Werte haben Vorrang wenn ausgefuellt, sonst gespeicherte Werte
+  const u=(document.getElementById('ghUser')?.value||'').trim()||_ghCfg.u;
+  const r=(document.getElementById('ghRepo')?.value||'').trim()||_ghCfg.r;
+  const t=(document.getElementById('ghToken')?.value||'').trim()||_ghCfg.t;
+  return{u,r,t};
 }
 function saveGhCfg(){
-  const c=getGh();
+  const c=getGh();_ghCfg=c;
   try{localStorage.setItem('gh_cfg',JSON.stringify({user:c.u,repo:c.r,token:c.t}));}catch(e){}
   updGhSt();
 }
 function loadGhCfg(){
   try{const c=JSON.parse(localStorage.getItem('gh_cfg')||'{}');
-    if(c.user&&document.getElementById('ghUser'))document.getElementById('ghUser').value=c.user;
-    if(c.repo&&document.getElementById('ghRepo'))document.getElementById('ghRepo').value=c.repo;
-    if(c.token&&document.getElementById('ghToken'))document.getElementById('ghToken').value=c.token;
+    _ghCfg={u:c.user||'',r:c.repo||'',t:c.token||''};
+    if(document.getElementById('ghUser'))document.getElementById('ghUser').value=_ghCfg.u;
+    if(document.getElementById('ghRepo'))document.getElementById('ghRepo').value=_ghCfg.r;
+    if(document.getElementById('ghToken'))document.getElementById('ghToken').value=_ghCfg.t;
   }catch(e){}updGhSt();
 }
 function updGhSt(){
