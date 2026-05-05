@@ -94,6 +94,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .mev { font-size: 16px; font-weight: 400; color: #f2f2f7; }
 .mzeit { font-size: 13px; color: #8e8e93; }
 .empty-msg { text-align: center; color: #636366; padding: 40px 0; font-size: 14px; }
+/* Mama past/future */
+.mi.past { opacity: 0.5; }
+.mdday-past { color: #636366 !important; }
+.mev-past { color: #8e8e93; }
+.mcheck { color: #5DCAA5; font-size: 14px; margin-right: 4px; }
+.msep { font-size: 10px; font-weight: 600; color: #636366; text-transform: uppercase; letter-spacing: 0.6px; padding: 12px 4px 4px; }
+.msep-next { font-size: 10px; font-weight: 600; color: #5DCAA5; text-transform: uppercase; letter-spacing: 0.6px; padding: 4px 4px 4px; }
 
 /* ── ADMIN OVERLAY ── */
 .ao { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.82); z-index: 200; overflow-y: auto; }
@@ -443,7 +450,10 @@ function render(){
 function renderMama(){
   document.getElementById('asub').textContent="Rike's Termine";
   const ml=document.getElementById('mlist');ml.innerHTML='';
-  const now=new Date();const tod=now.toISOString().split('T')[0];
+  const now=new Date();
+  const tod=now.toISOString().split('T')[0];
+
+  // Alle Rike-Events sammeln
   const all=[];
   Object.keys(KAL).sort().forEach(ds=>{
     (KAL[ds].events||[]).forEach(ev=>{
@@ -451,13 +461,50 @@ function renderMama(){
     });
   });
   if(!all.length){ml.innerHTML='<p class="empty-msg">Keine Rike-Termine eingetragen</p>';return;}
-  all.forEach(({ds,ev})=>{
-    const dt=new Date(ds);const isT=ds===tod;
+
+  // Aufteilen: zukunftig (inkl. heute) und vergangen
+  const future=all.filter(({ds})=>ds>=tod);
+  const past=all.filter(({ds})=>ds<tod).reverse(); // neueste zuerst
+
+  function makeItem(ds,ev,isPast){
+    const dt=new Date(ds);
+    const isT=ds===tod;
     const item=document.createElement('div');
-    item.className='mi'+(isT?' today':'');
-    item.innerHTML=`<div class="mdc"><div class="mddow">${WO[dt.getDay()]}</div><div class="mdday">${dt.getDate()}</div><div class="mdmon">${MK[dt.getMonth()]}</div></div><div class="mcc"><div class="mev">${ev.text}</div>${ev.zeit?`<div class="mzeit">${ev.zeit} Uhr</div>`:''}</div>`;
-    ml.appendChild(item);
+    item.className='mi'+(isT?' today':isPast?' past':'');
+    item.innerHTML=`
+      <div class="mdc">
+        <div class="mddow">${WO[dt.getDay()]}</div>
+        <div class="mdday${isPast?' mdday-past':''}">${dt.getDate()}</div>
+        <div class="mdmon">${MK[dt.getMonth()]}</div>
+      </div>
+      <div class="mcc">
+        <div class="mev${isPast?' mev-past':''}">${isPast?'<span class="mcheck">&#10003;</span> ':''}${ev.text}</div>
+        ${ev.zeit?`<div class="mzeit">${ev.zeit} Uhr</div>`:''}
+      </div>`;
+    return item;
+  }
+
+  // Naechster Termin hervorheben
+  future.forEach(({ds,ev},i)=>{
+    if(i===0&&ds>tod){
+      const lbl=document.createElement('div');
+      lbl.className='msep-next';lbl.textContent='N\u00e4chster Termin';
+      ml.appendChild(lbl);
+    } else if(i===1&&future[0].ds>tod){
+      const lbl=document.createElement('div');
+      lbl.className='msep';lbl.textContent='Kommende Termine';
+      ml.appendChild(lbl);
+    }
+    ml.appendChild(makeItem(ds,ev,false));
   });
+
+  // Vergangene Termine
+  if(past.length){
+    const sep=document.createElement('div');
+    sep.className='msep';sep.textContent='Vergangene Termine';
+    ml.appendChild(sep);
+    past.forEach(({ds,ev})=>ml.appendChild(makeItem(ds,ev,true)));
+  }
 }
 
 /* ── SEARCH ── */
