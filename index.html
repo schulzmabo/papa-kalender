@@ -356,9 +356,11 @@ function wmoIcon(c,r){
 function initView(){
   const p=new URLSearchParams(window.location.search);
   view=p.get('view')||'papa';
-  document.body.className='view-'+view;
-  const T={papa:"FamilyCalendar Schulz",rike:"FamilyCalendar Schulz",mama:"FamilyCalendar Schulz"};
-  const B={papa:"Papa",rike:"Rike",mama:"Mama"};
+  // family is alias for mama
+if(view==='family'||view==='overview')view='mama';
+document.body.className='view-'+view;
+  const T={papa:"FamilyCalendar Schulz",rike:"FamilyCalendar Schulz",mama:"FamilyCalendar Schulz",family:"FamilyCalendar Schulz",overview:"FamilyCalendar Schulz"};
+  const B={papa:"Papa",rike:"Rike",mama:"Mama",family:"Termine",overview:"Termine"};
   document.getElementById('atitle').textContent=T[view];
   document.getElementById('vbadge').textContent=B[view];
   if(view!=='papa')document.getElementById('adminBtn').style.display='none';
