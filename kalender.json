@@ -5,21 +5,49 @@
     "daten_gueltig_bis": "2030-12-31"
   },
   "schichten": {
+
+    "2026-04-01": {"schicht": null, "events": [
+      {"text": "Krankengymnastik Lisa-Marie L\u00e4mbgen", "zeit": "15:00", "who": "rike"}
+    ]},
+    "2026-04-08": {"schicht": null, "events": [
+      {"text": "Krankengymnastik Nora Bartocha", "zeit": "17:10", "who": "rike"}
+    ]},
+    "2026-04-22": {"schicht": null, "events": [
+      {"text": "Krankengymnastik Nora Bartocha", "zeit": "15:15", "who": "rike"}
+    ]},
+    "2026-04-29": {"schicht": null, "events": [
+      {"text": "Krankengymnastik Nora Bartocha", "zeit": "16:25", "who": "rike"}
+    ]},
+
     "2026-05-01": {"schicht": "12",     "events": []},
     "2026-05-04": {"schicht": "233",    "events": []},
     "2026-05-05": {"schicht": "235",    "events": []},
     "2026-05-06": {"schicht": "233",    "events": []},
     "2026-05-07": {"schicht": "233",    "events": []},
     "2026-05-08": {"schicht": "233",    "events": []},
-    "2026-05-11": {"schicht": "233",    "events": []},
+    "2026-05-11": {"schicht": "233",    "events": [
+      {"text": "Wahl 4. Hauptfach / Elternsprechtag", "zeit": "19:00", "who": "rike"}
+    ]},
     "2026-05-12": {"schicht": "235",    "events": []},
-    "2026-05-13": {"schicht": "233",    "events": []},
+    "2026-05-13": {"schicht": "233",    "events": [
+      {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
+      {"text": "Therapie Rolands Eck", "zeit": "17:30", "who": "rike"}
+    ]},
     "2026-05-14": {"schicht": "12",     "events": []},
     "2026-05-15": {"schicht": "URLAUB", "events": []},
-    "2026-05-16": {"schicht": null,     "events": [{"text": "Geburtstagsparty Sinit", "zeit": "16:00", "who": "rike"}]},
-    "2026-05-17": {"schicht": "1",      "events": [{"text": "Ende Party Sinit", "zeit": "10:00", "who": "rike"}]},
+    "2026-05-16": {"schicht": null,     "events": [
+      {"text": "Geburtstagsparty Sinit", "zeit": "16:00", "who": "rike"}
+    ]},
+    "2026-05-17": {"schicht": "1",      "events": [
+      {"text": "Ende Party Sinit", "zeit": "10:00", "who": "rike"}
+    ]},
     "2026-05-18": {"schicht": "233",    "events": []},
     "2026-05-19": {"schicht": "235",    "events": []},
+    "2026-05-20": {"schicht": "235",    "events": [
+      {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
+      {"text": "Elternsprechtag Fr. Sch\u00e4fer", "zeit": "16:50", "who": "rike"},
+      {"text": "Elternsprechtag Fr. Etabia",  "zeit": "17:10", "who": "rike"}
+    ]},
     "2026-05-21": {"schicht": "233",    "events": []},
     "2026-05-22": {"schicht": "233",    "events": []},
     "2026-05-25": {"schicht": "12",     "events": []},
