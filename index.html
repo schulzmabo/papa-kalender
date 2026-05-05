@@ -6,6 +6,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Papa">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>Papa's Kalender</title>
 <style>
 /* ── ORIGINAL STYLE (unveraenderlich) ── */
@@ -252,6 +255,27 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 </div>
 
 <div class="toast" id="toast"></div>
+
+<script>
+// Service Worker registrieren
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('sw.js').then(reg=>{
+    // Bei neuer Version sofort aktivieren
+    reg.addEventListener('updatefound',()=>{
+      const newWorker=reg.installing;
+      newWorker.addEventListener('statechange',()=>{
+        if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
+          // Neue Version da — Seite neu laden
+          showToast('↻ Neue Version geladen...');
+          setTimeout(()=>window.location.reload(),1500);
+        }
+      });
+    });
+  });
+  // Beim Start pruefen ob Update vorhanden
+  navigator.serviceWorker.ready.then(reg=>reg.update());
+}
+</script>
 
 <script>
 const SCHICHTEN={
@@ -786,7 +810,7 @@ const FALLBACK={
 };
 
 async function ladeKalender(){
-  try{const r=await fetch('kalender.json');const d=await r.json();KAL=d.schichten||{};svSt();}
+  try{const r=await fetch('kalender.json?v='+Date.now());const d=await r.json();KAL=d.schichten||{};svSt();}
   catch(e){KAL=FALLBACK;svSt();}
   try{const s=localStorage.getItem('kd');if(s){const ld=JSON.parse(s).schichten||{};Object.assign(KAL,ld);}}catch(e){}
 }
