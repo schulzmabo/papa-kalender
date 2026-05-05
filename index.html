@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Papa">
+<meta name="apple-mobile-web-app-title" content="FamilyCalendar Schulz">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Papa's Kalender</title>
+<title>FamilyCalendar Schulz</title>
 <style>
 /* ── ORIGINAL STYLE (unveraenderlich) ── */
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
@@ -157,7 +157,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 
 <div class="app-header">
   <span class="hdr-badge" id="vbadge">Papa</span>
-  <h1 id="atitle">Papa's Kalender</h1>
+  <h1 id="atitle">FamilyCalendar Schulz</h1>
   <p id="asub"></p>
   <button class="hdr-admin" id="adminBtn" onclick="openAdmin()">+ Termin</button>
 </div>
@@ -357,7 +357,7 @@ function initView(){
   const p=new URLSearchParams(window.location.search);
   view=p.get('view')||'papa';
   document.body.className='view-'+view;
-  const T={papa:"Papa's Kalender",rike:"Rike's Kalender",mama:"Kalender"};
+  const T={papa:"FamilyCalendar Schulz",rike:"FamilyCalendar Schulz",mama:"FamilyCalendar Schulz"};
   const B={papa:"Papa",rike:"Rike",mama:"Mama"};
   document.getElementById('atitle').textContent=T[view];
   document.getElementById('vbadge').textContent=B[view];
@@ -711,7 +711,7 @@ async function testGh(){
     else{r.style.color='#e05252';r.textContent='\u2717 HTTP '+res.status;}
   }catch(e){r.style.color='#e05252';r.textContent='\u2717 Netzwerkfehler';}
 }
-function bldJson(){return{meta:{titel:"Papa's Kalender",erstellt:new Date().toISOString().split('T')[0],daten_gueltig_bis:"2030-12-31"},schichten:KAL};}
+function bldJson(){return{meta:{titel:"FamilyCalendar Schulz",erstellt:new Date().toISOString().split('T')[0],daten_gueltig_bis:"2030-12-31"},schichten:KAL};}
 async function pushToGh(){
   const c=getGh();if(!c.u||!c.r||!c.t){showToast('GitHub-Einstellungen fehlen');return;}
   const btn=document.getElementById('pushBtn');const lbl=document.getElementById('pushLbl');

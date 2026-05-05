@@ -1,6 +1,6 @@
 {
   "meta": {
-    "titel": "Papa's Kalender",
+    "titel": "FamilyCalendar Schulz",
     "erstellt": "2026-05-05",
     "daten_gueltig_bis": "2030-12-31"
   },
@@ -33,7 +33,9 @@
       {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
       {"text": "Therapie Rolands Eck", "zeit": "17:30", "who": "rike"}
     ]},
-    "2026-05-14": {"schicht": "12",     "events": []},
+    "2026-05-14": {"schicht": "12",     "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]},
     "2026-05-15": {"schicht": "URLAUB", "events": []},
     "2026-05-16": {"schicht": null,     "events": [
       {"text": "Geburtstagsparty Sinit", "zeit": "16:00", "who": "rike"}
@@ -53,7 +55,9 @@
     "2026-05-25": {"schicht": "12",     "events": []},
     "2026-05-26": {"schicht": "235",    "events": []},
     "2026-05-27": {"schicht": "233",    "events": []},
-    "2026-05-28": {"schicht": "233",    "events": []},
+    "2026-05-28": {"schicht": "233",    "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]},
     "2026-05-29": {"schicht": "233",    "events": []},
 
     "2026-06-01": {"schicht": "233",    "events": []},
@@ -65,7 +69,9 @@
     "2026-06-08": {"schicht": "233",    "events": []},
     "2026-06-09": {"schicht": "233",    "events": []},
     "2026-06-10": {"schicht": "233",    "events": []},
-    "2026-06-11": {"schicht": "235",    "events": []},
+    "2026-06-11": {"schicht": "235",    "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]},
     "2026-06-12": {"schicht": "233",    "events": []},
     "2026-06-15": {"schicht": "233",    "events": []},
     "2026-06-16": {"schicht": "233",    "events": []},
@@ -76,10 +82,19 @@
     "2026-06-22": {"schicht": "233",    "events": []},
     "2026-06-23": {"schicht": "233",    "events": []},
     "2026-06-24": {"schicht": "233",    "events": []},
-    "2026-06-25": {"schicht": "235",    "events": []},
+    "2026-06-25": {"schicht": "235",    "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]},
     "2026-06-26": {"schicht": "233",    "events": []},
     "2026-06-28": {"schicht": "12",     "events": []},
     "2026-06-29": {"schicht": "233",    "events": []},
-    "2026-06-30": {"schicht": "233",    "events": []}
+    "2026-06-30": {"schicht": "233",    "events": []},
+
+    "2026-07-09": {"schicht": null,     "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]},
+    "2026-07-16": {"schicht": null,     "events": [
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+    ]}
   }
 }
