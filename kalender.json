@@ -43,9 +43,14 @@
     "2026-05-17": {"schicht": "1",      "events": [
       {"text": "Ende Party Sinit", "zeit": "10:00", "who": "rike"}
     ]},
-    "2026-05-18": {"schicht": "233",    "events": []},
-    "2026-05-19": {"schicht": "235",    "events": []},
+    "2026-05-18": {"schicht": "233",    "events": [
+      {"text": "Fu\u00dfpflege", "zeit": "17:30", "who": "papa"}
+    ]},
+    "2026-05-19": {"schicht": "235",    "events": [
+      {"text": "Schulkonferenz (Musikraum)", "zeit": "19:00", "who": "rike"}
+    ]},
     "2026-05-20": {"schicht": "235",    "events": [
+      {"text": "Zahnarzt Papa", "zeit": "09:00", "who": "papa"},
       {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
       {"text": "Elternsprechtag Fr. Sch\u00e4fer", "zeit": "16:50", "who": "rike"},
       {"text": "Elternsprechtag Fr. Etabia",  "zeit": "17:10", "who": "rike"}
@@ -66,7 +71,9 @@
     "2026-06-02": {"schicht": "233",    "events": []},
     "2026-06-03": {"schicht": "233",    "events": []},
     "2026-06-04": {"schicht": "FREI",   "events": []},
-    "2026-06-05": {"schicht": "233",    "events": []},
+    "2026-06-05": {"schicht": "233",    "events": [
+      {"text": "Unterrichtsfrei (Lehrerfortbildung)", "who": "rike"}
+    ]},
     "2026-06-07": {"schicht": "12",     "events": []},
     "2026-06-08": {"schicht": "233",    "events": []},
     "2026-06-09": {"schicht": "233",    "events": []},
@@ -87,7 +94,9 @@
     "2026-06-25": {"schicht": "235",    "events": [
       {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
     ]},
-    "2026-06-26": {"schicht": "233",    "events": []},
+    "2026-06-26": {"schicht": "233",    "events": [
+      {"text": "Entlassung Abschlussjahrgang, Unterrichtsende 10:30", "who": "rike"}
+    ]},
     "2026-06-28": {"schicht": "12",     "events": []},
     "2026-06-29": {"schicht": "233",    "events": []},
     "2026-06-30": {"schicht": "233",    "events": []},
@@ -95,8 +104,21 @@
     "2026-07-09": {"schicht": null,     "events": [
       {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
     ]},
+    "2026-07-13": {"schicht": null,     "events": [
+      {"text": "Projekttage", "who": "rike"}
+    ]},
+    "2026-07-14": {"schicht": null,     "events": [
+      {"text": "Projekttage", "who": "rike"}
+    ]},
+    "2026-07-15": {"schicht": null,     "events": [
+      {"text": "Projekttage", "who": "rike"}
+    ]},
     "2026-07-16": {"schicht": null,     "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
+      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"},
+      {"text": "Schulfest (12:00\u201316:00)", "zeit": "12:00", "who": "rike"}
+    ]},
+    "2026-07-17": {"schicht": null,     "events": [
+      {"text": "Zeugnistag, danach Sommerferien", "who": "rike"}
     ]}
   }
 }
