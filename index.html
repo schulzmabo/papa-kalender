@@ -572,16 +572,26 @@ function renderMama(){
   const ml=document.getElementById('mlist');ml.innerHTML='';
   const now=new Date();
   const tod=now.toISOString().split('T')[0];
+  const aktJahr=String(now.getFullYear()); // aktuelles Jahr fuer Wiederholungs-Filter
 
   // Sammeln aller fuer Mama sichtbaren Events:
   // - Rike-Termine (who='rike' oder leer, aber kein Familien-Geburtstag)
-  // - Rikes Ehrentag (immer)
-  // - Mamas eigener Ehrentag (immer)
+  // - Rikes Ehrentag (nur aktuelles Jahr)
+  // - Mamas eigener Ehrentag (nur aktuelles Jahr)
   // NICHT sichtbar: Familien-Geburtstage (10 Onkel/Tanten/Cousins), Papas Ehrentag
+  //
+  // WICHTIG: jaehrlich wiederkehrende Events (Ehrentage, Birthdays) werden in
+  // der Mama-View nur fuer das aktuelle Jahr angezeigt — sonst wuerde die flache
+  // Liste mit 5 Jahren x N Ehrentagen zugemuellt. Rike-Termine (einmalige
+  // Termine) bleiben ueber alle Jahre sichtbar.
   const all=[];
   Object.keys(KAL).sort().forEach(ds=>{
     (KAL[ds].events||[]).forEach(ev=>{
       if(!eventVisible(ev,'mama'))return;
+      // Wiederkehrende Events nur im aktuellen Jahr
+      if(isEhrentag(ev)||isBday(ev)){
+        if(ds.substring(0,4)!==aktJahr)return;
+      }
       all.push({ds,ev});
     });
   });
@@ -658,10 +668,13 @@ function clearSearch(){document.getElementById('sq').value='';onSearch('');}
 function renderSearch(q){
   const sq2=q.toLowerCase();const sr=document.getElementById('sres');sr.innerHTML='';
   const hits=[];
+  const aktJahr=String(new Date().getFullYear());
   Object.keys(KAL).sort().forEach(ds=>{
     const dd=KAL[ds]||{};
     const evs=(dd.events||[]).filter(ev=>{
       if(!eventVisible(ev,view))return false;
+      // Mama-View: jaehrlich wiederkehrende Events nur fuer aktuelles Jahr
+      if(view==='mama'&&(isEhrentag(ev)||isBday(ev))&&ds.substring(0,4)!==aktJahr)return false;
       // Birthday-Display-Text als Suche-Quelle (Rike kann nach "Onkel" suchen)
       const haystack=isBday(ev)?bdayDisplayText(ev):ev.text;
       return haystack.toLowerCase().includes(sq2);
