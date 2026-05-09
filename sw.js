@@ -1,8 +1,7 @@
 // sw.js — Papa Kalender Service Worker
 // Version hochzaehlen bei jeder neuen index.html Veröffentlichung
-const VERSION = 'papa-kalender-v12';
+const VERSION = 'papa-kalender-v15';
 const CACHE = VERSION;
-
 // Bei Installation: alten Cache loeschen, sofort aktivieren
 self.addEventListener('install', event => {
   event.waitUntil(
@@ -11,12 +10,10 @@ self.addEventListener('install', event => {
     ).then(() => self.skipWaiting())
   );
 });
-
 // Aktivierung: sofort alle Clients uebernehmen
 self.addEventListener('activate', event => {
   event.waitUntil(self.clients.claim());
 });
-
 // Fetch: Network-first Strategie
 // → immer zuerst vom Server laden
 // → nur bei Offline auf Cache zurueckfallen
@@ -30,7 +27,6 @@ self.addEventListener('fetch', event => {
     );
     return;
   }
-
   // index.html: Network-first, Cache als Fallback
   event.respondWith(
     fetch(event.request)

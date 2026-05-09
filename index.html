@@ -39,6 +39,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .shift-col.nacht    { background: #9D97E8; }
 .shift-col.frei     { background: #7DBF3F; }
 .shift-col.urlaub   { background: #ED93B1; }
+.shift-col.birthday { background: linear-gradient(180deg, #ED93B1 0%, #E8A84A 100%); }
+.shift-col.ehrentag-papa { background: linear-gradient(180deg, #FFD700 0%, #EF9F27 100%); }
+.shift-col.ehrentag-mama { background: linear-gradient(180deg, #E8E8EE 0%, #888780 100%); }
+.shift-col.ehrentag-rike { background: linear-gradient(180deg, #ED93B1 0%, #F4C0D1 100%); }
 .shift-col.none     { background: transparent; }
 .content-col { flex: 1; min-width: 0; padding: 11px 14px; display: flex; flex-direction: column; gap: 5px; justify-content: center; }
 .main-line { display: flex; align-items: center; justify-content: space-between; }
@@ -46,6 +50,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .t-time  { font-size: 16px; font-weight: 500; color: #f2f2f7; white-space: nowrap; min-width: 115px; flex-shrink: 0; }
 .t-label { font-size: 16px; font-weight: 400; color: #8e8e93; }
 .t-label.event { color: #f2f2f7; }
+.t-label.birthday { color: #ED93B1; font-weight: 600; letter-spacing: 0.3px; }
+.t-label.ehrentag-papa { color: #FFD700; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.t-label.ehrentag-mama { color: #E8E8EE; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.t-label.ehrentag-rike { color: #ED93B1; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
 .urlaub-label { font-size: 15px; font-weight: 600; color: #ED93B1; }
 .wetter-chip { display: flex; align-items: center; gap: 3px; flex-shrink: 0; margin-left: 8px; }
 .wetter-chip .wi { font-size: 17px; line-height: 1; }
@@ -54,6 +62,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .tag { font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 20px; }
 .tag-ferien   { background: #3d2e0f; color: #e8a84a; }
 .tag-feiertag { background: #0f2540; color: #5aabf5; }
+.tag-birthday { background: #4a1a2d; color: #ED93B1; }
+.tag-ehrentag-papa { background: #3d2e0f; color: #FFD700; border: 0.5px solid #FFD700; }
+.tag-ehrentag-mama { background: #2c2c2e; color: #E8E8EE; border: 0.5px solid #E8E8EE; }
+.tag-ehrentag-rike { background: #4a1a2d; color: #ED93B1; border: 0.5px solid #ED93B1; }
 .footer { font-size: 10px; color: #636366; text-align: center; padding: 6px 12px 24px; }
 /* ── who-Badge (neu, minimal, im Stil) ── */
 .who-badge { font-size: 10px; padding: 1px 5px; border-radius: 5px; font-weight: 600; margin-left: 6px; }
@@ -266,7 +278,7 @@ if('serviceWorker' in navigator){
       newWorker.addEventListener('statechange',()=>{
         if(newWorker.state==='installed'&&navigator.serviceWorker.controller){
           // Neue Version da — Seite neu laden
-          showToast('↻ Neue Version geladen...');
+          showToast('\u21bb Neue Version geladen...');
           setTimeout(()=>window.location.reload(),1500);
         }
       });
@@ -352,13 +364,65 @@ function wmoIcon(c,r){
   if(c<=49)return'\uD83C\uDF2B';if(c<=67)return'\uD83C\uDF27';if(c<=77)return'\u2744\uFE0F';
   if(c<=82)return'\uD83C\uDF26';if(c<=84)return'\uD83C\uDF28';return'\u26C8\uFE0F';
 }
+// Birthday-Helper: Event ist Geburtstag, wenn kind=='birthday' ODER text mit Geburtstags-Marker beginnt
+function isBday(ev){
+  if(!ev)return false;
+  if(ev.kind==='birthday')return true;
+  const t=ev.text||'';
+  return t.indexOf('\uD83C\uDF82')===0 || /HAPPY BIRTHDAY/i.test(t);
+}
+// Ehrentag-Helper: Papa, Mama, Rike haben besondere "Ehrentag"-Eintraege mit
+// kind = 'ehrentag-papa' | 'ehrentag-mama' | 'ehrentag-rike'.
+// Sichtbarkeit pro View:
+//   ehrentag-papa: Papa + Rike sichtbar, Mama ausgeblendet
+//   ehrentag-mama: Mama + Rike sichtbar, Papa ausgeblendet
+//   ehrentag-rike: alle drei sichtbar
+function ehrentagSlug(ev){
+  if(!ev||!ev.kind)return null;
+  if(ev.kind==='ehrentag-papa')return 'papa';
+  if(ev.kind==='ehrentag-mama')return 'mama';
+  if(ev.kind==='ehrentag-rike')return 'rike';
+  return null;
+}
+function isEhrentag(ev){return ehrentagSlug(ev)!==null;}
+function ehrentagVisible(ev,viewName){
+  const slug=ehrentagSlug(ev);
+  if(!slug)return false;
+  if(slug==='rike')return true; // Rikes Ehrentag immer sichtbar
+  if(slug==='papa')return viewName!=='mama'; // Papas Ehrentag: nicht bei Mama
+  if(slug==='mama')return viewName!=='papa'; // Mamas Ehrentag: nicht bei Papa
+  return false;
+}
+// Zentraler Filter: liefert true wenn Event in der aktuellen View sichtbar sein soll
+function eventVisible(ev,viewName){
+  if(isEhrentag(ev))return ehrentagVisible(ev,viewName);
+  if(isBday(ev))return viewName!=='mama'; // normale Familien-Geburtstage: nur Mama ausblenden
+  if(viewName==='mama')return !ev.who||ev.who==='rike'; // Mama: nur rike-events
+  return true; // Papa+Rike: alle anderen Events
+}
+// Geburtstags-Anzeigename je nach View:
+// - Rike-View: bei Markus/Christian/Reinhard wird "Onkel " vorangestellt, bei Ute "Tante "
+// - Papa-View / sonst: Originaltext aus der JSON (kurz, ohne Verwandtschaftsbezeichnung)
+// Mama-View sieht keine Geburtstage (Filter passiert weiter unten).
+const BDAY_RIKE_PREFIX={Markus:'Onkel ',Christian:'Onkel ',Reinhard:'Onkel ',Ute:'Tante '};
+function bdayDisplayText(ev){
+  const t=ev.text||'';
+  if(view!=='rike')return t;
+  // Pruefen ob einer der Vornamen direkt nach "HAPPY BIRTHDAY " steht
+  // Pattern: "🎂 HAPPY BIRTHDAY <Name>" optional gefolgt von " (<Alter>)"
+  const m=t.match(/^(\uD83C\uDF82\s*HAPPY BIRTHDAY\s+)(\S+)(.*)$/);
+  if(!m)return t;
+  const pre=m[1],name=m[2],rest=m[3];
+  if(BDAY_RIKE_PREFIX[name])return pre+BDAY_RIKE_PREFIX[name]+name+rest;
+  return t;
+}
 
 function initView(){
   const p=new URLSearchParams(window.location.search);
   view=p.get('view')||'papa';
   // family is alias for mama
-if(view==='family'||view==='overview')view='mama';
-document.body.className='view-'+view;
+  if(view==='family'||view==='overview')view='mama';
+  document.body.className='view-'+view;
   const T={papa:"FamilyCalendar Schulz",rike:"FamilyCalendar Schulz",mama:"FamilyCalendar Schulz",family:"FamilyCalendar Schulz",overview:"FamilyCalendar Schulz"};
   const B={papa:"Papa",rike:"Rike",mama:"Mama",family:"Termine",overview:"Termine"};
   document.getElementById('atitle').textContent=T[view];
@@ -418,9 +482,21 @@ function render(){
     const ft=FT[ds],fer=getFer(ds);
     const dd=KAL[ds]||{};
     const s=dd.schicht?SCHICHTEN[dd.schicht]:null;
-    const evs=dd.events||[];
+    const allEvs=dd.events||[];
+    // Sichtbarkeitsfilter: Ehrentag und Birthday view-abhaengig
+    const evs=allEvs.filter(ev=>eventVisible(ev,view));
     const w=WET[ds];
-    const typ=s?s.typ:(dd.schicht==='FREI'?'frei':dd.schicht==='URLAUB'?'urlaub':'none');
+    // Detection: hat dieser Tag einen Geburtstag oder Ehrentag (nach Filter)?
+    const hasBday=evs.some(isBday);
+    const ehrentagSlugHere=evs.map(ehrentagSlug).find(x=>x); // erster Ehrentag-Slug oder undefined
+    // Streifenfarbe: Schicht hat Vorrang, dann Ehrentag, dann Birthday, sonst leer
+    let typ;
+    if(s) typ=s.typ;
+    else if(dd.schicht==='FREI') typ='frei';
+    else if(dd.schicht==='URLAUB') typ='urlaub';
+    else if(ehrentagSlugHere) typ='ehrentag-'+ehrentagSlugHere;
+    else if(hasBday) typ='birthday';
+    else typ='none';
     const isEmpty=!dd.schicht&&!evs.length&&!ft&&!fer;
 
     const card=document.createElement('div');
@@ -431,11 +507,22 @@ function render(){
     card.className=cls;
 
     const wc=w?`<div class="wetter-chip"><span class="wi">${w.icon}</span><span class="wt">${w.temp}\u00b0</span></div>`:'';
-    function zeile(zeit,label,ev,who){
-      const wb=(view==='papa'&&who)?`<span class="who-badge who-${who}">${who}</span>`:'';
-      return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label${ev?' event':''}">${label}</span>${wb}</div>`;
+    function zeile(zeit,label,ev,who,bday,ehrSlug){
+      const wb=(view==='papa'&&who&&!bday&&!ehrSlug)?`<span class="who-badge who-${who}">${who}</span>`:'';
+      let cls='';
+      if(ehrSlug) cls='ehrentag-'+ehrSlug;
+      else if(bday) cls='birthday';
+      else if(ev) cls='event';
+      return`<div class="time-row"><span class="t-time">${zeit||''}</span><span class="t-label ${cls}">${label}</span>${wb}</div>`;
     }
     function erste(c){return`<div class="main-line">${c}${wc}</div>`;}
+    // Helper: Display-Text + Birthday/Ehrentag-Markierung pro Event
+    function evMeta(ev){
+      const eh=ehrentagSlug(ev);
+      const bd=isBday(ev);
+      const text=bd?bdayDisplayText(ev):ev.text;
+      return {text, bd, eh};
+    }
 
     let h=`<div class="card-inner">
       <div class="date-col">
@@ -446,25 +533,32 @@ function render(){
       <div class="content-col">`;
 
     if(s&&s.von){
-      h+=erste(zeile(s.von+' \u2013 '+s.bis,'Dienst',false,''));
-      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
+      h+=erste(zeile(s.von+' \u2013 '+s.bis,'Dienst',false,'',false,null));
+      evs.forEach(ev=>{const m=evMeta(ev);h+=zeile(ev.zeit||'',m.text,true,ev.who||'',m.bd,m.eh);});
     } else if(dd.schicht==='URLAUB'){
       h+=erste(`<div class="urlaub-label">Urlaub</div>`);
-      evs.forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
+      evs.forEach(ev=>{const m=evMeta(ev);h+=zeile(ev.zeit||'',m.text,true,ev.who||'',m.bd,m.eh);});
     } else if(dd.schicht==='FREI'||evs.length){
       if(evs.length){
-        h+=erste(zeile(evs[0].zeit||'',evs[0].text,true,evs[0].who||''));
-        evs.slice(1).forEach(ev=>{h+=zeile(ev.zeit||'',ev.text,true,ev.who||'');});
+        const m0=evMeta(evs[0]);
+        h+=erste(zeile(evs[0].zeit||'',m0.text,true,evs[0].who||'',m0.bd,m0.eh));
+        evs.slice(1).forEach(ev=>{const m=evMeta(ev);h+=zeile(ev.zeit||'',m.text,true,ev.who||'',m.bd,m.eh);});
       } else {
         h+=erste('');
       }
     }
 
     h+=`</div></div>`;
-    if(ft||fer){
+    // Welche Ehrentag-Slugs erscheinen heute?
+    const ehrentagSlugs=[...new Set(evs.map(ehrentagSlug).filter(x=>x))];
+    const ehrLabels={papa:'Papa',mama:'Mama',rike:'Rike'};
+    const ehrTags=ehrentagSlugs.map(slug=>`<span class="tag tag-ehrentag-${slug}">\u2b50 ${ehrLabels[slug]}s Ehrentag</span>`).join('');
+    if(ft||fer||hasBday||ehrentagSlugs.length){
       h+=`<div class="tag-row">
         ${fer?'<span class="tag tag-ferien">Schulferien</span>':''}
         ${ft?`<span class="tag tag-feiertag">${ft}</span>`:''}
+        ${hasBday?'<span class="tag tag-birthday">\uD83C\uDF82 Geburtstag</span>':''}
+        ${ehrTags}
       </div>`;
     }
     card.innerHTML=h;list.appendChild(card);
@@ -479,11 +573,16 @@ function renderMama(){
   const now=new Date();
   const tod=now.toISOString().split('T')[0];
 
-  // Alle Rike-Events sammeln
+  // Sammeln aller fuer Mama sichtbaren Events:
+  // - Rike-Termine (who='rike' oder leer, aber kein Familien-Geburtstag)
+  // - Rikes Ehrentag (immer)
+  // - Mamas eigener Ehrentag (immer)
+  // NICHT sichtbar: Familien-Geburtstage (10 Onkel/Tanten/Cousins), Papas Ehrentag
   const all=[];
   Object.keys(KAL).sort().forEach(ds=>{
     (KAL[ds].events||[]).forEach(ev=>{
-      if(!ev.who||ev.who==='rike')all.push({ds,ev});
+      if(!eventVisible(ev,'mama'))return;
+      all.push({ds,ev});
     });
   });
   if(!all.length){ml.innerHTML='<p class="empty-msg">Keine Rike-Termine eingetragen</p>';return;}
@@ -495,8 +594,15 @@ function renderMama(){
   function makeItem(ds,ev,isPast){
     const dt=new Date(ds);
     const isT=ds===tod;
+    const eh=ehrentagSlug(ev);
     const item=document.createElement('div');
     item.className='mi'+(isT?' today':isPast?' past':'');
+    // Bei Ehrentagen: spezielle Anzeige im Stil des Badges
+    let evClass='mev';
+    if(isPast)evClass+=' mev-past';
+    let evStyle='';
+    if(eh==='rike')evStyle='color:#ED93B1;font-weight:600;letter-spacing:0.3px;';
+    else if(eh==='mama')evStyle='color:#E8E8EE;font-weight:600;letter-spacing:0.3px;';
     item.innerHTML=`
       <div class="mdc">
         <div class="mddow">${WO[dt.getDay()]}</div>
@@ -504,7 +610,7 @@ function renderMama(){
         <div class="mdmon">${MK[dt.getMonth()]}</div>
       </div>
       <div class="mcc">
-        <div class="mev${isPast?' mev-past':''}">${isPast?'<span class="mcheck">&#10003;</span> ':''}${ev.text}</div>
+        <div class="${evClass}" style="${evStyle}">${isPast?'<span class="mcheck">&#10003;</span> ':''}${ev.text}</div>
         ${ev.zeit?`<div class="mzeit">${ev.zeit} Uhr</div>`:''}
       </div>`;
     return item;
@@ -555,11 +661,13 @@ function renderSearch(q){
   Object.keys(KAL).sort().forEach(ds=>{
     const dd=KAL[ds]||{};
     const evs=(dd.events||[]).filter(ev=>{
-      if(view==='mama')return(!ev.who||ev.who==='rike')&&ev.text.toLowerCase().includes(sq2);
-      return ev.text.toLowerCase().includes(sq2);
+      if(!eventVisible(ev,view))return false;
+      // Birthday-Display-Text als Suche-Quelle (Rike kann nach "Onkel" suchen)
+      const haystack=isBday(ev)?bdayDisplayText(ev):ev.text;
+      return haystack.toLowerCase().includes(sq2);
     });
     const sm=dd.schicht&&dd.schicht.toLowerCase().includes(sq2);
-    if(evs.length)evs.forEach(ev=>hits.push({ds,text:ev.text,zeit:ev.zeit}));
+    if(evs.length)evs.forEach(ev=>hits.push({ds,text:isBday(ev)?bdayDisplayText(ev):ev.text,zeit:ev.zeit}));
     else if(sm&&view!=='mama'){const s=SCHICHTEN[dd.schicht];hits.push({ds,text:'Dienst '+dd.schicht,zeit:s?s.von+'\u2013'+s.bis:''});}
   });
   if(!hits.length){sr.innerHTML=`<p class="empty-msg">Keine Ergebnisse f\u00fcr \u201e${q}\u201c</p>`;return;}
@@ -757,59 +865,1043 @@ function loadJSON(event){
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
 
 const FALLBACK={
-  "2026-04-01":{"schicht":null,"events":[{"text":"Krankengymnastik Lisa-Marie L\u00e4mbgen","zeit":"15:00","who":"rike"}]},
-  "2026-04-08":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"17:10","who":"rike"}]},
-  "2026-04-22":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"15:15","who":"rike"}]},
-  "2026-04-29":{"schicht":null,"events":[{"text":"Krankengymnastik Nora Bartocha","zeit":"16:25","who":"rike"}]},
-  "2026-05-01":{"schicht":"12","events":[]},
-  "2026-05-04":{"schicht":"233","events":[]},
-  "2026-05-05":{"schicht":"235","events":[]},
-  "2026-05-06":{"schicht":"233","events":[]},
-  "2026-05-07":{"schicht":"233","events":[]},
-  "2026-05-08":{"schicht":"233","events":[]},
-  "2026-05-11":{"schicht":"233","events":[{"text":"Wahl 4. Hauptfach / Elternsprechtag","zeit":"19:00","who":"rike"}]},
-  "2026-05-12":{"schicht":"235","events":[]},
-  "2026-05-13":{"schicht":"233","events":[{"text":"Krankengymnastik (Nora Bartocha)","zeit":"15:15","who":"rike"},{"text":"Therapie Rolands Eck","zeit":"17:30","who":"rike"}]},
-  "2026-05-14":{"schicht":"12","events":[]},
-  "2026-05-15":{"schicht":"URLAUB","events":[]},
-  "2026-05-16":{"schicht":null,"events":[{"text":"Geburtstagsparty Sinit","zeit":"16:00","who":"rike"}]},
-  "2026-05-17":{"schicht":"1","events":[{"text":"Ende Party Sinit","zeit":"10:00","who":"rike"}]},
-  "2026-05-18":{"schicht":"233","events":[]},
-  "2026-05-19":{"schicht":"235","events":[]},
-  "2026-05-20":{"schicht":"235","events":[{"text":"Krankengymnastik (Nora Bartocha)","zeit":"15:15","who":"rike"},{"text":"Elternsprechtag Fr. Sch\u00e4fer","zeit":"16:50","who":"rike"},{"text":"Elternsprechtag Fr. Etabia","zeit":"17:10","who":"rike"}]},
-  "2026-05-21":{"schicht":"233","events":[]},
-  "2026-05-22":{"schicht":"233","events":[]},
-  "2026-05-25":{"schicht":"12","events":[]},
-  "2026-05-26":{"schicht":"235","events":[]},
-  "2026-05-27":{"schicht":"233","events":[]},
-  "2026-05-28":{"schicht":"233","events":[]},
-  "2026-05-29":{"schicht":"233","events":[]},
-  "2026-06-01":{"schicht":"233","events":[]},
-  "2026-06-02":{"schicht":"233","events":[]},
-  "2026-06-03":{"schicht":"233","events":[]},
-  "2026-06-04":{"schicht":"FREI","events":[]},
-  "2026-06-05":{"schicht":"233","events":[]},
-  "2026-06-07":{"schicht":"12","events":[]},
-  "2026-06-08":{"schicht":"233","events":[]},
-  "2026-06-09":{"schicht":"233","events":[]},
-  "2026-06-10":{"schicht":"233","events":[]},
-  "2026-06-11":{"schicht":"235","events":[]},
-  "2026-06-12":{"schicht":"233","events":[]},
-  "2026-06-15":{"schicht":"233","events":[]},
-  "2026-06-16":{"schicht":"233","events":[]},
-  "2026-06-17":{"schicht":"233","events":[]},
-  "2026-06-18":{"schicht":"235","events":[]},
-  "2026-06-19":{"schicht":"233","events":[]},
-  "2026-06-21":{"schicht":"12","events":[]},
-  "2026-06-22":{"schicht":"233","events":[]},
-  "2026-06-23":{"schicht":"233","events":[]},
-  "2026-06-24":{"schicht":"233","events":[]},
-  "2026-06-25":{"schicht":"235","events":[]},
-  "2026-06-26":{"schicht":"233","events":[]},
-  "2026-06-28":{"schicht":"12","events":[]},
-  "2026-06-29":{"schicht":"233","events":[]},
-  "2026-06-30":{"schicht":"233","events":[]}
+  "2026-02-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ PAPAS EHRENTAG · 47 Jahre",
+        "kind": "ehrentag-papa",
+        "who": "papa"
+      }
+    ]
+  },
+  "2026-04-01": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Krankengymnastik Lisa-Marie Lämbgen",
+        "zeit": "15:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-04-08": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Krankengymnastik Nora Bartocha",
+        "zeit": "17:10",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-04-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Krankengymnastik Nora Bartocha",
+        "zeit": "15:15",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-04-29": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Krankengymnastik Nora Bartocha",
+        "zeit": "16:25",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-01": {
+    "schicht": "12",
+    "events": []
+  },
+  "2026-05-04": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-05": {
+    "schicht": "235",
+    "events": []
+  },
+  "2026-05-06": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-07": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-08": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-11": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Wahl 4. Hauptfach / Elternsprechtag",
+        "zeit": "19:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-12": {
+    "schicht": "235",
+    "events": []
+  },
+  "2026-05-13": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Krankengymnastik (Nora Bartocha)",
+        "zeit": "15:15",
+        "who": "rike"
+      },
+      {
+        "text": "Therapie Rolands Eck",
+        "zeit": "17:30",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-14": {
+    "schicht": "12",
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      },
+      {
+        "text": "🎂 HAPPY BIRTHDAY Tristan (16)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-05-15": {
+    "schicht": "URLAUB",
+    "events": []
+  },
+  "2026-05-16": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Geburtstagsparty Sinit",
+        "zeit": "16:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-17": {
+    "schicht": "1",
+    "events": [
+      {
+        "text": "Ende Party Sinit",
+        "zeit": "10:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-18": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Fußpflege",
+        "zeit": "17:30",
+        "who": "papa"
+      },
+      {
+        "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-05-19": {
+    "schicht": "235",
+    "events": [
+      {
+        "text": "Schulkonferenz (Musikraum)",
+        "zeit": "19:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-20": {
+    "schicht": "235",
+    "events": [
+      {
+        "text": "Zahnarzt Papa",
+        "zeit": "09:00",
+        "who": "papa"
+      },
+      {
+        "text": "Krankengymnastik (Nora Bartocha)",
+        "zeit": "15:15",
+        "who": "rike"
+      },
+      {
+        "text": "Elternsprechtag Fr. Schäfer",
+        "zeit": "16:50",
+        "who": "rike"
+      },
+      {
+        "text": "Elternsprechtag Fr. Etabia",
+        "zeit": "17:10",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-21": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Orthopäde",
+        "zeit": "10:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-22": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-25": {
+    "schicht": "12",
+    "events": []
+  },
+  "2026-05-26": {
+    "schicht": "235",
+    "events": []
+  },
+  "2026-05-27": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-05-28": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-05-29": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-01": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-02": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-03": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-04": {
+    "schicht": "FREI",
+    "events": []
+  },
+  "2026-06-05": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Unterrichtsfrei (Lehrerfortbildung)",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-06-07": {
+    "schicht": "12",
+    "events": []
+  },
+  "2026-06-08": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-09": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-10": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-11": {
+    "schicht": "235",
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-06-12": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-15": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-16": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-17": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-18": {
+    "schicht": "235",
+    "events": []
+  },
+  "2026-06-19": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-20": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Julius (13)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-06-21": {
+    "schicht": "12",
+    "events": []
+  },
+  "2026-06-22": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-23": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-24": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-25": {
+    "schicht": "235",
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-06-26": {
+    "schicht": "233",
+    "events": [
+      {
+        "text": "Entlassung Abschlussjahrgang, Unterrichtsende 10:30",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-06-27": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Christian",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-06-28": {
+    "schicht": "12",
+    "events": []
+  },
+  "2026-06-29": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-06-30": {
+    "schicht": "233",
+    "events": []
+  },
+  "2026-07-05": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Ute",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-07-09": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-07-13": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Projekttage",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-07-14": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Projekttage",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-07-15": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Projekttage",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-07-16": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Treffen Rike & Mama",
+        "zeit": "13:05",
+        "who": "rike"
+      },
+      {
+        "text": "Schulfest (12:00–16:00)",
+        "zeit": "12:00",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-07-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "Zeugnistag, danach Sommerferien",
+        "who": "rike"
+      }
+    ]
+  },
+  "2026-08-21": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ MAMAS EHRENTAG · 46 Jahre",
+        "kind": "ehrentag-mama",
+        "who": "papa"
+      }
+    ]
+  },
+  "2026-08-26": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ RIKES EHRENTAG · 13 Jahre",
+        "kind": "ehrentag-rike",
+        "who": "papa"
+      }
+    ]
+  },
+  "2026-10-12": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Reinhard",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-11-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Marie (11)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-12-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-12-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Markus",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2026-12-28": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Madeline (15)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-02-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ PAPAS EHRENTAG · 48 Jahre",
+        "kind": "ehrentag-papa",
+        "who": "papa"
+      }
+    ]
+  },
+  "2027-05-14": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Tristan (17)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-05-18": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-06-20": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Julius (14)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-06-27": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Christian",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-07-05": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Ute",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-08-21": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ MAMAS EHRENTAG · 47 Jahre",
+        "kind": "ehrentag-mama",
+        "who": "papa"
+      }
+    ]
+  },
+  "2027-08-26": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ RIKES EHRENTAG · 14 Jahre",
+        "kind": "ehrentag-rike",
+        "who": "papa"
+      }
+    ]
+  },
+  "2027-10-12": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Reinhard",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-11-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Marie (12)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-12-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-12-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Markus",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2027-12-28": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Madeline (16)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-02-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ PAPAS EHRENTAG · 49 Jahre",
+        "kind": "ehrentag-papa",
+        "who": "papa"
+      }
+    ]
+  },
+  "2028-05-14": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Tristan (18)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-05-18": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-06-20": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Julius (15)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-06-27": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Christian",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-07-05": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Ute",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-08-21": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ MAMAS EHRENTAG · 48 Jahre",
+        "kind": "ehrentag-mama",
+        "who": "papa"
+      }
+    ]
+  },
+  "2028-08-26": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ RIKES EHRENTAG · 15 Jahre",
+        "kind": "ehrentag-rike",
+        "who": "papa"
+      }
+    ]
+  },
+  "2028-10-12": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Reinhard",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-11-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Marie (13)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-12-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-12-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Markus",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2028-12-28": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Madeline (17)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-02-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ PAPAS EHRENTAG · 50 Jahre",
+        "kind": "ehrentag-papa",
+        "who": "papa"
+      }
+    ]
+  },
+  "2029-05-14": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Tristan (19)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-05-18": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-06-20": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Julius (16)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-06-27": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Christian",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-07-05": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Ute",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-08-21": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ MAMAS EHRENTAG · 49 Jahre",
+        "kind": "ehrentag-mama",
+        "who": "papa"
+      }
+    ]
+  },
+  "2029-08-26": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ RIKES EHRENTAG · 16 Jahre",
+        "kind": "ehrentag-rike",
+        "who": "papa"
+      }
+    ]
+  },
+  "2029-10-12": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Reinhard",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-11-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Marie (14)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-12-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-12-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Markus",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2029-12-28": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Madeline (18)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-02-17": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ PAPAS EHRENTAG · 51 Jahre",
+        "kind": "ehrentag-papa",
+        "who": "papa"
+      }
+    ]
+  },
+  "2030-05-14": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Tristan (20)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-05-18": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-06-20": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Julius (17)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-06-27": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Christian",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-07-05": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Ute",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-08-21": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ MAMAS EHRENTAG · 50 Jahre",
+        "kind": "ehrentag-mama",
+        "who": "papa"
+      }
+    ]
+  },
+  "2030-08-26": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "⭐ RIKES EHRENTAG · 17 Jahre",
+        "kind": "ehrentag-rike",
+        "who": "papa"
+      }
+    ]
+  },
+  "2030-10-12": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Reinhard",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-11-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Marie (15)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-12-03": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-12-22": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Markus",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  },
+  "2030-12-28": {
+    "schicht": null,
+    "events": [
+      {
+        "text": "🎂 HAPPY BIRTHDAY Madeline (19)",
+        "who": "papa",
+        "kind": "birthday"
+      }
+    ]
+  }
 };
+
 
 async function ladeKalender(){
   try{const r=await fetch('kalender.json?v='+Date.now());const d=await r.json();KAL=d.schichten||{};svSt();}

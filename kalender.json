@@ -1,124 +1,1044 @@
 {
   "meta": {
     "titel": "FamilyCalendar Schulz",
-    "erstellt": "2026-05-05",
+    "erstellt": "2026-05-09",
     "daten_gueltig_bis": "2030-12-31"
   },
   "schichten": {
-
-    "2026-04-01": {"schicht": null, "events": [
-      {"text": "Krankengymnastik Lisa-Marie L\u00e4mbgen", "zeit": "15:00", "who": "rike"}
-    ]},
-    "2026-04-08": {"schicht": null, "events": [
-      {"text": "Krankengymnastik Nora Bartocha", "zeit": "17:10", "who": "rike"}
-    ]},
-    "2026-04-22": {"schicht": null, "events": [
-      {"text": "Krankengymnastik Nora Bartocha", "zeit": "15:15", "who": "rike"}
-    ]},
-    "2026-04-29": {"schicht": null, "events": [
-      {"text": "Krankengymnastik Nora Bartocha", "zeit": "16:25", "who": "rike"}
-    ]},
-
-    "2026-05-01": {"schicht": "12",     "events": []},
-    "2026-05-04": {"schicht": "233",    "events": []},
-    "2026-05-05": {"schicht": "235",    "events": []},
-    "2026-05-06": {"schicht": "233",    "events": []},
-    "2026-05-07": {"schicht": "233",    "events": []},
-    "2026-05-08": {"schicht": "233",    "events": []},
-    "2026-05-11": {"schicht": "233",    "events": [
-      {"text": "Wahl 4. Hauptfach / Elternsprechtag", "zeit": "19:00", "who": "rike"}
-    ]},
-    "2026-05-12": {"schicht": "235",    "events": []},
-    "2026-05-13": {"schicht": "233",    "events": [
-      {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
-      {"text": "Therapie Rolands Eck", "zeit": "17:30", "who": "rike"}
-    ]},
-    "2026-05-14": {"schicht": "12",     "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
-    ]},
-    "2026-05-15": {"schicht": "URLAUB", "events": []},
-    "2026-05-16": {"schicht": null,     "events": [
-      {"text": "Geburtstagsparty Sinit", "zeit": "16:00", "who": "rike"}
-    ]},
-    "2026-05-17": {"schicht": "1",      "events": [
-      {"text": "Ende Party Sinit", "zeit": "10:00", "who": "rike"}
-    ]},
-    "2026-05-18": {"schicht": "233",    "events": [
-      {"text": "Fu\u00dfpflege", "zeit": "17:30", "who": "papa"}
-    ]},
-    "2026-05-19": {"schicht": "235",    "events": [
-      {"text": "Schulkonferenz (Musikraum)", "zeit": "19:00", "who": "rike"}
-    ]},
-    "2026-05-20": {"schicht": "235",    "events": [
-      {"text": "Zahnarzt Papa", "zeit": "09:00", "who": "papa"},
-      {"text": "Krankengymnastik (Nora Bartocha)", "zeit": "15:15", "who": "rike"},
-      {"text": "Elternsprechtag Fr. Sch\u00e4fer", "zeit": "16:50", "who": "rike"},
-      {"text": "Elternsprechtag Fr. Etabia",  "zeit": "17:10", "who": "rike"}
-    ]},
-    "2026-05-21": {"schicht": "233",    "events": [
-      {"text": "Orthop\u00e4de", "zeit": "10:00", "who": "rike"}
-    ]},
-    "2026-05-22": {"schicht": "233",    "events": []},
-    "2026-05-25": {"schicht": "12",     "events": []},
-    "2026-05-26": {"schicht": "235",    "events": []},
-    "2026-05-27": {"schicht": "233",    "events": []},
-    "2026-05-28": {"schicht": "233",    "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
-    ]},
-    "2026-05-29": {"schicht": "233",    "events": []},
-
-    "2026-06-01": {"schicht": "233",    "events": []},
-    "2026-06-02": {"schicht": "233",    "events": []},
-    "2026-06-03": {"schicht": "233",    "events": []},
-    "2026-06-04": {"schicht": "FREI",   "events": []},
-    "2026-06-05": {"schicht": "233",    "events": [
-      {"text": "Unterrichtsfrei (Lehrerfortbildung)", "who": "rike"}
-    ]},
-    "2026-06-07": {"schicht": "12",     "events": []},
-    "2026-06-08": {"schicht": "233",    "events": []},
-    "2026-06-09": {"schicht": "233",    "events": []},
-    "2026-06-10": {"schicht": "233",    "events": []},
-    "2026-06-11": {"schicht": "235",    "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
-    ]},
-    "2026-06-12": {"schicht": "233",    "events": []},
-    "2026-06-15": {"schicht": "233",    "events": []},
-    "2026-06-16": {"schicht": "233",    "events": []},
-    "2026-06-17": {"schicht": "233",    "events": []},
-    "2026-06-18": {"schicht": "235",    "events": []},
-    "2026-06-19": {"schicht": "233",    "events": []},
-    "2026-06-21": {"schicht": "12",     "events": []},
-    "2026-06-22": {"schicht": "233",    "events": []},
-    "2026-06-23": {"schicht": "233",    "events": []},
-    "2026-06-24": {"schicht": "233",    "events": []},
-    "2026-06-25": {"schicht": "235",    "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
-    ]},
-    "2026-06-26": {"schicht": "233",    "events": [
-      {"text": "Entlassung Abschlussjahrgang, Unterrichtsende 10:30", "who": "rike"}
-    ]},
-    "2026-06-28": {"schicht": "12",     "events": []},
-    "2026-06-29": {"schicht": "233",    "events": []},
-    "2026-06-30": {"schicht": "233",    "events": []},
-
-    "2026-07-09": {"schicht": null,     "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"}
-    ]},
-    "2026-07-13": {"schicht": null,     "events": [
-      {"text": "Projekttage", "who": "rike"}
-    ]},
-    "2026-07-14": {"schicht": null,     "events": [
-      {"text": "Projekttage", "who": "rike"}
-    ]},
-    "2026-07-15": {"schicht": null,     "events": [
-      {"text": "Projekttage", "who": "rike"}
-    ]},
-    "2026-07-16": {"schicht": null,     "events": [
-      {"text": "Treffen Rike & Mama", "zeit": "13:05", "who": "rike"},
-      {"text": "Schulfest (12:00\u201316:00)", "zeit": "12:00", "who": "rike"}
-    ]},
-    "2026-07-17": {"schicht": null,     "events": [
-      {"text": "Zeugnistag, danach Sommerferien", "who": "rike"}
-    ]}
+    "2026-02-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ PAPAS EHRENTAG · 47 Jahre",
+          "kind": "ehrentag-papa",
+          "who": "papa"
+        }
+      ]
+    },
+    "2026-04-01": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Krankengymnastik Lisa-Marie Lämbgen",
+          "zeit": "15:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-04-08": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Krankengymnastik Nora Bartocha",
+          "zeit": "17:10",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-04-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Krankengymnastik Nora Bartocha",
+          "zeit": "15:15",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-04-29": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Krankengymnastik Nora Bartocha",
+          "zeit": "16:25",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-01": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-05-04": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-05": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-06": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-07": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-08": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-11": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Wahl 4. Hauptfach / Elternsprechtag",
+          "zeit": "19:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-12": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-13": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Krankengymnastik (Nora Bartocha)",
+          "zeit": "15:15",
+          "who": "rike"
+        },
+        {
+          "text": "Therapie Rolands Eck",
+          "zeit": "17:30",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-14": {
+      "schicht": "12",
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        },
+        {
+          "text": "🎂 HAPPY BIRTHDAY Tristan (16)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-05-15": {
+      "schicht": "URLAUB",
+      "events": []
+    },
+    "2026-05-16": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Geburtstagsparty Sinit",
+          "zeit": "16:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-17": {
+      "schicht": "1",
+      "events": [
+        {
+          "text": "Ende Party Sinit",
+          "zeit": "10:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-18": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Fußpflege",
+          "zeit": "17:30",
+          "who": "papa"
+        },
+        {
+          "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-05-19": {
+      "schicht": "235",
+      "events": [
+        {
+          "text": "Schulkonferenz (Musikraum)",
+          "zeit": "19:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-20": {
+      "schicht": "235",
+      "events": [
+        {
+          "text": "Zahnarzt Papa",
+          "zeit": "09:00",
+          "who": "papa"
+        },
+        {
+          "text": "Krankengymnastik (Nora Bartocha)",
+          "zeit": "15:15",
+          "who": "rike"
+        },
+        {
+          "text": "Elternsprechtag Fr. Schäfer",
+          "zeit": "16:50",
+          "who": "rike"
+        },
+        {
+          "text": "Elternsprechtag Fr. Etabia",
+          "zeit": "17:10",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-21": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Orthopäde",
+          "zeit": "10:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-22": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-25": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-05-26": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-05-27": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-05-28": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-05-29": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-01": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-02": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-03": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-04": {
+      "schicht": "FREI",
+      "events": []
+    },
+    "2026-06-05": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Unterrichtsfrei (Lehrerfortbildung)",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-06-07": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-08": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-09": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-10": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-11": {
+      "schicht": "235",
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-06-12": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-15": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-16": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-17": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-18": {
+      "schicht": "235",
+      "events": []
+    },
+    "2026-06-19": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-20": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Julius (13)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-06-21": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-22": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-23": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-24": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-25": {
+      "schicht": "235",
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-06-26": {
+      "schicht": "233",
+      "events": [
+        {
+          "text": "Entlassung Abschlussjahrgang, Unterrichtsende 10:30",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-06-27": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Christian",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-06-28": {
+      "schicht": "12",
+      "events": []
+    },
+    "2026-06-29": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-06-30": {
+      "schicht": "233",
+      "events": []
+    },
+    "2026-07-05": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Ute",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-07-09": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-07-13": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Projekttage",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-07-14": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Projekttage",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-07-15": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Projekttage",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-07-16": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Treffen Rike & Mama",
+          "zeit": "13:05",
+          "who": "rike"
+        },
+        {
+          "text": "Schulfest (12:00–16:00)",
+          "zeit": "12:00",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-07-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "Zeugnistag, danach Sommerferien",
+          "who": "rike"
+        }
+      ]
+    },
+    "2026-08-21": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ MAMAS EHRENTAG · 46 Jahre",
+          "kind": "ehrentag-mama",
+          "who": "papa"
+        }
+      ]
+    },
+    "2026-08-26": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ RIKES EHRENTAG · 13 Jahre",
+          "kind": "ehrentag-rike",
+          "who": "papa"
+        }
+      ]
+    },
+    "2026-10-12": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Reinhard",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-11-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Marie (11)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-12-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-12-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Markus",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2026-12-28": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Madeline (15)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-02-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ PAPAS EHRENTAG · 48 Jahre",
+          "kind": "ehrentag-papa",
+          "who": "papa"
+        }
+      ]
+    },
+    "2027-05-14": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Tristan (17)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-05-18": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-06-20": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Julius (14)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-06-27": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Christian",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-07-05": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Ute",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-08-21": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ MAMAS EHRENTAG · 47 Jahre",
+          "kind": "ehrentag-mama",
+          "who": "papa"
+        }
+      ]
+    },
+    "2027-08-26": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ RIKES EHRENTAG · 14 Jahre",
+          "kind": "ehrentag-rike",
+          "who": "papa"
+        }
+      ]
+    },
+    "2027-10-12": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Reinhard",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-11-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Marie (12)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-12-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-12-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Markus",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2027-12-28": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Madeline (16)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-02-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ PAPAS EHRENTAG · 49 Jahre",
+          "kind": "ehrentag-papa",
+          "who": "papa"
+        }
+      ]
+    },
+    "2028-05-14": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Tristan (18)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-05-18": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-06-20": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Julius (15)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-06-27": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Christian",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-07-05": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Ute",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-08-21": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ MAMAS EHRENTAG · 48 Jahre",
+          "kind": "ehrentag-mama",
+          "who": "papa"
+        }
+      ]
+    },
+    "2028-08-26": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ RIKES EHRENTAG · 15 Jahre",
+          "kind": "ehrentag-rike",
+          "who": "papa"
+        }
+      ]
+    },
+    "2028-10-12": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Reinhard",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-11-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Marie (13)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-12-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-12-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Markus",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2028-12-28": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Madeline (17)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-02-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ PAPAS EHRENTAG · 50 Jahre",
+          "kind": "ehrentag-papa",
+          "who": "papa"
+        }
+      ]
+    },
+    "2029-05-14": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Tristan (19)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-05-18": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-06-20": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Julius (16)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-06-27": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Christian",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-07-05": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Ute",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-08-21": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ MAMAS EHRENTAG · 49 Jahre",
+          "kind": "ehrentag-mama",
+          "who": "papa"
+        }
+      ]
+    },
+    "2029-08-26": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ RIKES EHRENTAG · 16 Jahre",
+          "kind": "ehrentag-rike",
+          "who": "papa"
+        }
+      ]
+    },
+    "2029-10-12": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Reinhard",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-11-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Marie (14)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-12-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-12-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Markus",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2029-12-28": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Madeline (18)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-02-17": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ PAPAS EHRENTAG · 51 Jahre",
+          "kind": "ehrentag-papa",
+          "who": "papa"
+        }
+      ]
+    },
+    "2030-05-14": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Tristan (20)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-05-18": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Oma Annemarie",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-06-20": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Julius (17)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-06-27": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Christian",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-07-05": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Ute",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-08-21": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ MAMAS EHRENTAG · 50 Jahre",
+          "kind": "ehrentag-mama",
+          "who": "papa"
+        }
+      ]
+    },
+    "2030-08-26": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "⭐ RIKES EHRENTAG · 17 Jahre",
+          "kind": "ehrentag-rike",
+          "who": "papa"
+        }
+      ]
+    },
+    "2030-10-12": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Reinhard",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-11-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Marie (15)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-12-03": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Opa Wilfried",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-12-22": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Markus",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    },
+    "2030-12-28": {
+      "schicht": null,
+      "events": [
+        {
+          "text": "🎂 HAPPY BIRTHDAY Madeline (19)",
+          "who": "papa",
+          "kind": "birthday"
+        }
+      ]
+    }
   }
 }
