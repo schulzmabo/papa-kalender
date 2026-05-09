@@ -1,6 +1,6 @@
 // sw.js — Papa Kalender Service Worker
 // Version hochzaehlen bei jeder neuen index.html Veröffentlichung
-const VERSION = 'papa-kalender-v17';
+const VERSION = 'papa-kalender-v16';
 const CACHE = VERSION;
 // Bei Installation: alten Cache loeschen, sofort aktivieren
 self.addEventListener('install', event => {
