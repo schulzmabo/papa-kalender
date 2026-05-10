@@ -116,6 +116,17 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-se
 .mcheck { color: #5DCAA5; font-size: 14px; margin-right: 4px; }
 .msep { font-size: 10px; font-weight: 600; color: #636366; text-transform: uppercase; letter-spacing: 0.6px; padding: 12px 4px 4px; }
 .msep-next { font-size: 10px; font-weight: 600; color: #5DCAA5; text-transform: uppercase; letter-spacing: 0.6px; padding: 4px 4px 4px; }
+.msep-today { font-size: 10px; font-weight: 600; color: #9D97E8; text-transform: uppercase; letter-spacing: 0.6px; padding: 4px 4px 4px; }
+
+/* Mama-View: Countdown-Pille fuer zukuenftige Termine */
+.mzeit-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.mcountdown { font-size: 11px; font-weight: 600; padding: 2px 7px; border-radius: 10px; background: rgba(255,255,255,.06); color: #8e8e93; white-space: nowrap; }
+.mcountdown.next { background: rgba(93,202,165,.18); color: #5DCAA5; }
+.mcountdown.today-cd { background: rgba(157,151,232,.22); color: #c0bcf5; }
+
+/* Mama-View: "Alle"-Pille als erster Tab */
+.mtab.alle { font-weight: 600; }
+.mtab.alle.active { background: #7F77DD; color: #fff; border-color: #7F77DD; }
 
 /* ── ADMIN OVERLAY ── */
 .ao { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.82); z-index: 200; overflow-y: auto; }
@@ -356,6 +367,9 @@ const MK=['Jan','Feb','M\u00e4r','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov'
 const WO=['So','Mo','Di','Mi','Do','Fr','Sa'];
 
 let KAL={},WET={},view='papa',yr,mo,ghSha=null,aiP=null,sq='';
+// Mama-View: Filter fuer Pillen-Buttons. 'all' = Alle Termine (Default),
+// sonst Monatsindex 0-11 fuer den entsprechenden Monat des aktuellen Jahres.
+let mamaFilter='all';
 
 function pad(n){return String(n).padStart(2,'0');}
 function getFer(d){for(const f of FERIEN){if(d>=f.von&&d<=f.bis)return true;}return false;}
@@ -416,6 +430,23 @@ function bdayDisplayText(ev){
   if(BDAY_RIKE_PREFIX[name])return pre+BDAY_RIKE_PREFIX[name]+name+rest;
   return t;
 }
+// Countdown-Text fuer zukuenftige Termine — z.B. "morgen", "in 3 Tagen".
+// Liefert null fuer vergangene oder heutige Termine (heute braucht keinen Countdown).
+function countdownText(ds){
+  // Differenz in Tagen zum heutigen Datum, bezogen auf lokale Mitternacht
+  const now=new Date();
+  const today=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+  const [y,m,d]=ds.split('-').map(Number);
+  const target=new Date(y,m-1,d);
+  const diff=Math.round((target-today)/(1000*60*60*24));
+  if(diff<=0)return null; // heute oder vergangen
+  if(diff===1)return 'morgen';
+  if(diff===2)return '\u00fcbermorgen';
+  if(diff<=14)return 'in '+diff+' Tagen';
+  if(diff<=60)return 'in '+Math.round(diff/7)+' Wochen';
+  if(diff<365)return 'in '+Math.round(diff/30)+' Monaten';
+  return 'in '+Math.round(diff/365)+' Jahr(en)';
+}
 
 function initView(){
   const p=new URLSearchParams(window.location.search);
@@ -435,6 +466,38 @@ function svSt(){try{localStorage.setItem('kd',JSON.stringify({schichten:KAL}));}
 
 function renderTabs(){
   const tabs=document.getElementById('mtabs');tabs.innerHTML='';
+  // Mama-View hat eigene Pillen-Logik: vorne "Alle", dann nur Monate des
+  // aktuellen Jahres die tatsaechlich Termine fuer Mama enthalten.
+  if(view==='mama'){
+    const aktJahr=String(new Date().getFullYear());
+    // "Alle"-Pille zuerst
+    const allBtn=document.createElement('button');
+    allBtn.className='mtab alle'+(mamaFilter==='all'?' active':'');
+    allBtn.textContent='\u2605 Alle';
+    allBtn.onclick=()=>{mamaFilter='all';renderTabs();renderAll();};
+    tabs.appendChild(allBtn);
+    // Pro Monat eine Pille (immer Jan–Dez), aktiv markieren wenn ausgewaehlt
+    for(let m=0;m<12;m++){
+      const hd=Object.keys(KAL).some(ds=>{
+        if(!ds.startsWith(aktJahr+'-'+pad(m+1)))return false;
+        // gibt es in dem Monat ueberhaupt Eintraege die Mama sieht?
+        return (KAL[ds].events||[]).some(ev=>{
+          if(!eventVisible(ev,'mama'))return false;
+          if((isEhrentag(ev)||isBday(ev))&&ds.substring(0,4)!==aktJahr)return false;
+          return true;
+        });
+      });
+      const btn=document.createElement('button');
+      btn.className='mtab'+(mamaFilter===m?' active':hd?' hd':'');
+      btn.textContent=MK[m];
+      btn.onclick=()=>{mamaFilter=m;renderTabs();renderAll();};
+      tabs.appendChild(btn);
+    }
+    const a=tabs.querySelector('.active');
+    if(a)a.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+    return;
+  }
+  // Papa/Rike-View: bestehende Logik unveraendert
   for(let m=0;m<12;m++){
     const hd=Object.keys(KAL).some(ds=>ds.startsWith(yr+'-'+pad(m+1)));
     const btn=document.createElement('button');
@@ -568,11 +631,17 @@ function render(){
 
 /* ── MAMA VIEW ── */
 function renderMama(){
-  document.getElementById('asub').textContent="Rike's Termine";
   const ml=document.getElementById('mlist');ml.innerHTML='';
   const now=new Date();
   const tod=now.toISOString().split('T')[0];
-  const aktJahr=String(now.getFullYear()); // aktuelles Jahr fuer Wiederholungs-Filter
+  const aktJahr=String(now.getFullYear());
+
+  // Untertitel je nach Filter
+  if(mamaFilter==='all'){
+    document.getElementById('asub').textContent="Rike's Termine \u00b7 Alle";
+  } else {
+    document.getElementById('asub').textContent=MO[mamaFilter]+' '+aktJahr;
+  }
 
   // Sammeln aller fuer Mama sichtbaren Events:
   // - Rike-Termine (who='rike' oder leer, aber kein Familien-Geburtstag)
@@ -581,9 +650,9 @@ function renderMama(){
   // NICHT sichtbar: Familien-Geburtstage (10 Onkel/Tanten/Cousins), Papas Ehrentag
   //
   // WICHTIG: jaehrlich wiederkehrende Events (Ehrentage, Birthdays) werden in
-  // der Mama-View nur fuer das aktuelle Jahr angezeigt — sonst wuerde die flache
-  // Liste mit 5 Jahren x N Ehrentagen zugemuellt. Rike-Termine (einmalige
-  // Termine) bleiben ueber alle Jahre sichtbar.
+  // der Mama-View nur fuer das aktuelle Jahr angezeigt.
+  // Wenn mamaFilter ein Monat ist, werden zusaetzlich nur Termine dieses
+  // Monats im aktuellen Jahr angezeigt.
   const all=[];
   Object.keys(KAL).sort().forEach(ds=>{
     (KAL[ds].events||[]).forEach(ev=>{
@@ -592,13 +661,24 @@ function renderMama(){
       if(isEhrentag(ev)||isBday(ev)){
         if(ds.substring(0,4)!==aktJahr)return;
       }
+      // Monatsfilter wenn aktiv
+      if(mamaFilter!=='all'){
+        if(ds.substring(0,4)!==aktJahr)return;
+        if(parseInt(ds.substring(5,7),10)!==mamaFilter+1)return;
+      }
       all.push({ds,ev});
     });
   });
-  if(!all.length){ml.innerHTML='<p class="empty-msg">Keine Rike-Termine eingetragen</p>';return;}
+  if(!all.length){
+    const msg=mamaFilter==='all'
+      ?'Keine Rike-Termine eingetragen'
+      :'Keine Termine im '+MO[mamaFilter]+' '+aktJahr;
+    ml.innerHTML='<p class="empty-msg">'+msg+'</p>';return;
+  }
 
-  // Aufteilen: zukunftig (inkl. heute) und vergangen
-  const future=all.filter(({ds})=>ds>=tod);
+  // Aufteilen: heute, zukuenftig, vergangen
+  const todayList=all.filter(({ds})=>ds===tod);
+  const future=all.filter(({ds})=>ds>tod);
   const past=all.filter(({ds})=>ds<tod).reverse(); // neueste zuerst
 
   function makeItem(ds,ev,isPast){
@@ -613,6 +693,18 @@ function renderMama(){
     let evStyle='';
     if(eh==='rike')evStyle='color:#ED93B1;font-weight:600;letter-spacing:0.3px;';
     else if(eh==='mama')evStyle='color:#E8E8EE;font-weight:600;letter-spacing:0.3px;';
+    // Countdown-Pille
+    const cd=isPast?null:countdownText(ds);
+    let cdClass='mcountdown';
+    // "next"-Style fuer den naechsten anstehenden Termin (erster zukuenftiger)
+    // wird durch Aufrufer gesetzt — hier nur Default-Style
+    const cdHtml=cd?`<span class="${cdClass}">${cd}</span>`:'';
+    const todayCdHtml=isT?'<span class="mcountdown today-cd">heute</span>':'';
+    // zeit + countdown in eigene Zeile, beide optional
+    const hasZeitOrCd=ev.zeit||cdHtml||todayCdHtml;
+    const zeitRow=hasZeitOrCd
+      ?`<div class="mzeit-row">${ev.zeit?`<span class="mzeit">${ev.zeit} Uhr</span>`:''}${todayCdHtml}${cdHtml}</div>`
+      :'';
     item.innerHTML=`
       <div class="mdc">
         <div class="mddow">${WO[dt.getDay()]}</div>
@@ -621,29 +713,47 @@ function renderMama(){
       </div>
       <div class="mcc">
         <div class="${evClass}" style="${evStyle}">${isPast?'<span class="mcheck">&#10003;</span> ':''}${ev.text}</div>
-        ${ev.zeit?`<div class="mzeit">${ev.zeit} Uhr</div>`:''}
+        ${zeitRow}
       </div>`;
     return item;
   }
 
-  // Naechster Termin hervorheben
-  future.forEach(({ds,ev},i)=>{
-    if(i===0&&ds>tod){
-      const lbl=document.createElement('div');
-      lbl.className='msep-next';lbl.textContent='N\u00e4chster Termin';
-      ml.appendChild(lbl);
-    } else if(i===1&&future[0].ds>tod){
-      const lbl=document.createElement('div');
-      lbl.className='msep';lbl.textContent='Kommende Termine';
-      ml.appendChild(lbl);
+  // Heute (falls Termine heute)
+  if(todayList.length){
+    const lbl=document.createElement('div');
+    lbl.className='msep-today';
+    lbl.textContent='Heute';
+    ml.appendChild(lbl);
+    todayList.forEach(({ds,ev})=>ml.appendChild(makeItem(ds,ev,false)));
+  }
+
+  // Naechster Termin + restliche Zukunft
+  if(future.length){
+    // Erster zukuenftiger bekommt "Naechster Termin" Header und gruene Pille
+    const firstNext=future[0];
+    const lblNext=document.createElement('div');
+    lblNext.className='msep-next';
+    lblNext.textContent='N\u00e4chster Termin';
+    ml.appendChild(lblNext);
+    const firstItem=makeItem(firstNext.ds,firstNext.ev,false);
+    // Pille auf "next"-Stil aendern (gruen)
+    const cdEl=firstItem.querySelector('.mcountdown:not(.today-cd)');
+    if(cdEl)cdEl.classList.add('next');
+    ml.appendChild(firstItem);
+    if(future.length>1){
+      const lblK=document.createElement('div');
+      lblK.className='msep';
+      lblK.textContent='Kommende Termine';
+      ml.appendChild(lblK);
+      future.slice(1).forEach(({ds,ev})=>ml.appendChild(makeItem(ds,ev,false)));
     }
-    ml.appendChild(makeItem(ds,ev,false));
-  });
+  }
 
   // Vergangene Termine
   if(past.length){
     const sep=document.createElement('div');
-    sep.className='msep';sep.textContent='Vergangene Termine';
+    sep.className='msep';
+    sep.textContent=mamaFilter==='all'?'Vergangene Termine':'Bereits gewesen';
     ml.appendChild(sep);
     past.forEach(({ds,ev})=>ml.appendChild(makeItem(ds,ev,true)));
   }
